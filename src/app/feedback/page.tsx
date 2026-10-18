@@ -56,6 +56,10 @@ export default function Feedback() {
             Found a problem, got an idea, or something wasn&apos;t clear? Tell us here. If something went wrong, say what you
             asked and what happened. Please leave out personal or financial details such as account numbers.
           </p>
+          <p>
+            Only Tickerwise sees this message. To report in public, where others can add to it and follow what happens,{" "}
+            <a href="https://github.com/hadooping/tickerwise-research/issues/new/choose">open an issue on GitHub</a>.
+          </p>
 
           <label htmlFor="message">Your message</label>
           <textarea

@@ -404,10 +404,18 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
       {
         q: "How do I report a problem or suggest a feature?",
         a: (
-          <p>
-            Use the <Link href="/feedback">Send feedback</Link> page. Tell us what you asked and what went wrong, but leave
-            out personal or financial details. If you&apos;d like a reply, add a way to reach you.
-          </p>
+          <>
+            <p>
+              <a href="https://github.com/hadooping/tickerwise-research/issues/new/choose">Open an issue on GitHub</a>: choose &ldquo;Report a problem&rdquo; or
+              &ldquo;Suggest an idea&rdquo;. Issues are public, so others can see what&apos;s been reported, add to it, and
+              follow what happens. Say what you asked and what went wrong, but leave out personal or financial details such
+              as account numbers, holdings or income.
+            </p>
+            <p>
+              No GitHub account, or something you&apos;d rather keep private? Use the <Link href="/feedback">Send
+              feedback</Link> page instead; only Tickerwise sees it. If you&apos;d like a reply, add a way to reach you.
+            </p>
+          </>
         ),
       },
     ],

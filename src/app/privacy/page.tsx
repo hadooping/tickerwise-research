@@ -89,6 +89,10 @@ export default function Privacy() {
         form of your network address used for the daily question limit, so one person can&apos;t send too many messages.
         Only the people who run Tickerwise can read it.
       </p>
+      <p>
+        Issues opened on GitHub are different: they&apos;re public, posted under your GitHub account, and handled under
+        GitHub&apos;s own terms and privacy policy. Don&apos;t include personal or financial details in them.
+      </p>
 
       <h2>Frequently searched</h2>
       <p>
