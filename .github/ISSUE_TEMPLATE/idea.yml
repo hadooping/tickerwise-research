@@ -1,0 +1,19 @@
+name: An idea
+description: Something Tickerwise could explain, show or do better
+labels: [idea]
+body:
+  - type: markdown
+    attributes:
+      value: Issues are **public**, so please leave out personal or financial details.
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help?
+      description: What you were trying to understand or do, and what would have made it easier.
+    validations:
+      required: true
+  - type: dropdown
+    id: country
+    attributes:
+      label: Which country does it matter for?
+      options: [UK, India, US, All of them]

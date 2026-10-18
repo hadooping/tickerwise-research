@@ -1,0 +1,615 @@
+// Evergreen starter questions for the home page, tagged by who they suit: "uk", "in" (India),
+// "us", or "any". Each visit shows a few from different topics, matched to the person's country.
+// Keep them answerable with research (no "should I buy" questions).
+
+export type Where = "uk" | "in" | "us" | "any";
+export type Locale = "uk" | "in" | "us" | null; // null: not known, so show everything
+
+export type Topic =
+  | "monthly"
+  | "basics"
+  | "accounts"
+  | "funds"
+  | "companies"
+  | "valuation"
+  | "mortgages"
+  | "bonds"
+  | "compare"
+  | "markets"
+  | "risk"
+  | "retirement"
+  | "alternatives"
+  | "legacy";
+
+/** Names for the "Browse by topic" chips on the home page, in the order shown. */
+export const TOPIC_LABELS: Record<Topic, string> = {
+  monthly: "Monthly investing",
+  basics: "Basics",
+  accounts: "Accounts",
+  funds: "Funds",
+  companies: "Companies",
+  valuation: "Valuation",
+  mortgages: "Mortgages",
+  bonds: "Bonds",
+  compare: "Comparisons",
+  markets: "Markets",
+  risk: "Risk",
+  retirement: "Retirement",
+  legacy: "Tax & inheritance",
+  alternatives: "Alternatives",
+};
+
+const q = (where: Where, ...texts: string[]) => texts.map((text) => ({ text, where }));
+
+export const STARTER_QUESTIONS: Record<Topic, { text: string; where: Where }[]> = {
+  // These run the monthly-investing replay and show a chart.
+  monthly: [
+    ...q(
+      "uk",
+      "I can invest £500 a month. What would have grown the most over the last 10 years?",
+      "If I'd put £200 a month into a world index fund for 10 years, what would I have now?",
+      "I have £100 a month to invest. How would different funds have done over 5 years?",
+      "How would £300 a month in a FTSE 100 fund compare with a global fund over 10 years?",
+      "I can start with £5,000 and add £250 a month. What would have grown most in 10 years?",
+      "How would £1,000 a month have done in Vanguard LifeStrategy 80 vs 60 over 10 years?",
+      "What would £150 a month in a Nasdaq 100 fund have become, and how big were the falls?",
+      "If I'd invested £400 a month in UK dividend shares since 2016, what would I have?",
+    ),
+    ...q(
+      "in",
+      "I can do a ₹10,000 monthly SIP. Which Indian index funds would have grown most in 10 years?",
+      "What would a ₹5,000 SIP in a Nifty 50 ETF have become over the last 10 years?",
+      "How would a ₹25,000 monthly SIP in Indian midcaps compare with the Nifty 50?",
+      "If I'd started a ₹3,000 monthly SIP in a Nifty 50 index fund 10 years ago, what would I have?",
+      "How would a ₹15,000 SIP split between Nifty 50 and gold have done over 10 years?",
+    ),
+    ...q(
+      "us",
+      "What would $500 a month in the S&P 500 have become over the last 10 years?",
+      "How would $1,000 a month in US index funds have grown over the last 10 years?",
+    ),
+  ],
+  basics: [
+    ...q(
+      "any",
+      "What is an index fund, and why do people recommend them to beginners?",
+      "What's the difference between a share, a fund, and an ETF?",
+      "What does diversification mean, and how many holdings is enough?",
+      "What is a dividend, and how do companies decide how much to pay?",
+      "What does a P/E ratio tell me, in plain English?",
+      "What is market capitalisation, and why does it matter?",
+      "What are bonds, and why do investors hold them alongside shares?",
+      "What's the difference between investing and trading?",
+      "How do I read a company's annual results without getting lost?",
+      "What's the difference between growth and value investing?",
+      "Why do share prices go up and down every day?",
+      "What happens to my investments if my investment platform goes bust?",
+      "How much should I keep in cash before I start investing?",
+      "What is inflation doing to cash savings, and how do investments compare?",
+      "What does 'past performance is not a guide to future returns' really mean?",
+      "What are small-cap, mid-cap, and large-cap shares?",
+    ),
+    ...q(
+      "uk",
+      "How does compound growth work when you invest every month?",
+      "What does 'pound-cost averaging' mean, and does it really help?",
+      "What does an ETF's ongoing charge (OCF) actually cost me over 20 years?",
+      "What are accumulation and income fund units, and which is which?",
+      "What is a stock market index, and how is the FTSE 100 calculated?",
+    ),
+    ...q(
+      "in",
+      "What is a SIP, and how is it different from investing a lump sum?",
+      "What does a mutual fund's NAV mean?",
+      "What's the difference between large-cap, mid-cap, and small-cap funds in India?",
+      "What is XIRR, and why is it used to measure SIP returns?",
+    ),
+  ],
+  accounts: [
+    ...q(
+      "uk",
+      "What is an ISA, and should I use one for investing?",
+      "What's the difference between a Stocks and Shares ISA and a Lifetime ISA?",
+      "How does a Lifetime ISA bonus work, and when do I lose it?",
+      "How much can I put in an ISA this tax year, and what counts towards it?",
+      "Is it better to pay into a pension or an ISA? What are the trade-offs?",
+      "How does tax relief on pension contributions work in the UK?",
+      "What is a SIPP, and how is it different from a workplace pension?",
+      "How do employer pension contributions and salary sacrifice work?",
+      "What is capital gains tax on shares in the UK, and how much is the allowance?",
+      "How are dividends taxed in the UK outside an ISA?",
+      "What is a Junior ISA, and how does it work for children?",
+      "Can I transfer an old ISA to a different provider without losing the tax benefits?",
+      "What fees do UK investment platforms charge, and how do they compare?",
+    ),
+    ...q(
+      "in",
+      "What is ELSS, and how does its 3-year lock-in work?",
+      "PPF vs ELSS vs NPS: what are the trade-offs for long-term savings?",
+      "How is capital gains tax charged on Indian shares and equity mutual funds?",
+      "What is a demat account, and how do I hold ETFs in India?",
+      "What is NPS, and how do its tax benefits work?",
+      "How does PPF compare with an equity mutual fund over 15 years?",
+      "Old vs new tax regime: does investing in ELSS still save tax?",
+      "How does a SIP step-up work?",
+      "What happens to my SIP if I miss a payment?",
+      "How do I move from a regular plan to a direct plan, and what does it cost?",
+    ),
+    ...q(
+      "us",
+      "What's the difference between a 401(k) and an IRA?",
+      "Roth IRA vs traditional IRA: what's the difference?",
+      "How does a 401(k) employer match work?",
+    ),
+  ],
+  funds: [
+    ...q(
+      "any",
+      "What are bond funds, and how did they do when interest rates rose?",
+      "What is a money market fund, and how does it compare with a savings account?",
+      "What's the difference between an active fund and a passive fund?",
+      "What is a target-date or 'retirement year' fund?",
+      "What are dividend ETFs, and how do their yields compare?",
+      "How do emerging markets funds work, and how have they performed?",
+    ),
+    ...q(
+      "uk",
+      "What's in Vanguard LifeStrategy 60, and how risky is it?",
+      "How does a global index fund like Vanguard FTSE All-World work?",
+      "What's the difference between VUSA and VUAG?",
+      "Compare the fees on the main S&P 500 ETFs available in the UK.",
+      "What does the iShares Core MSCI World ETF hold?",
+      "What are investment trusts, and how are they different from funds?",
+      "How has Scottish Mortgage investment trust performed over 10 years?",
+      "What does hedged mean on an ETF, like a GBP-hedged S&P 500 fund?",
+      "What's in the HSBC FTSE All-World index fund, and how cheap is it?",
+    ),
+    ...q(
+      "in",
+      "Direct vs regular mutual fund plans: how much do the fees differ?",
+      "What does Parag Parikh Flexi Cap invest in, and how has it performed?",
+      "How have Indian midcap and smallcap funds done compared with the Nifty 50?",
+      "How does a Nifty 50 index fund compare with an active large-cap fund?",
+      "What is a flexi-cap fund?",
+      "What is an exit load on a mutual fund?",
+      "How do the main Nifty 50 index funds compare on expense ratio?",
+      "What are debt mutual funds, and how are they taxed now?",
+    ),
+  ],
+  companies: [
+    ...q(
+      "any",
+      "Give me a rundown of Nvidia's latest quarter.",
+      "How does Apple make most of its money now?",
+      "What's driving Microsoft's growth, and how big is its AI business?",
+      "How is Amazon's cloud business doing compared with its shop?",
+      "What does Alphabet earn from Search, YouTube, and Cloud?",
+      "How is Tesla doing on deliveries and profit margins?",
+      "What does Berkshire Hathaway own, and how is it run?",
+      "How has Meta's spending on AI affected its profits?",
+      "What does Broadcom do, and why has it grown so fast?",
+      "How is Netflix growing now that password sharing is restricted?",
+      "What's happening with Eli Lilly and its weight-loss drugs?",
+      "How does JPMorgan make money, and how did its latest results look?",
+      "What does Costco's membership model mean for its profits?",
+    ),
+    ...q(
+      "uk",
+      "Give me a rundown of Shell's latest results.",
+      "How has Rolls-Royce turned its business around?",
+      "What does AstraZeneca make, and how fast is it growing?",
+      "How is Lloyds Banking Group doing, and what's affecting its profits?",
+      "What's happening with BP's strategy and share price?",
+      "How does Unilever make money, and how has it performed?",
+      "What drives HSBC's profits, and how exposed is it to Asia?",
+      "How is Tesco doing against the other UK supermarkets?",
+      "What's the story behind Legal & General's dividend?",
+      "How has BAE Systems' share price changed with defence spending?",
+      "What does GSK do, and how has the share price performed?",
+      "How is Diageo doing, and why has the share price been under pressure?",
+      "What does London Stock Exchange Group actually do?",
+    ),
+    ...q(
+      "in",
+      "Give me a rundown of Reliance Industries' latest results.",
+      "Give me a rundown of Infosys's latest results.",
+      "How is HDFC Bank doing since its merger with HDFC?",
+      "What's driving Bharti Airtel's growth?",
+      "Give me a rundown of ITC.",
+      "How is Tata Motors doing?",
+    ),
+  ],
+  // These run the bond yields tool: today's yields, the long-run history and past world events.
+  bonds: [
+    ...q(
+      "any",
+      "What does it mean when bond yields rise, and why do bond prices fall?",
+      "When were bond yields last this high, and what happened next?",
+      "What is the yield curve, and what does it mean when it inverts?",
+      "How do rising bond yields affect the stock market?",
+      "Why do bond yields matter for mortgage rates?",
+      "How did bond funds lose money in 2022, and could it happen again?",
+      "If bond yields rose another 1%, what would happen to short and long bond funds?",
+      "How did bonds, shares and a 60/40 portfolio do in the 2008 crash compared with 2022?",
+      "Is holding a single bond to maturity safer than owning a bond fund?",
+    ),
+    ...q(
+      "uk",
+      "Why are gilt yields rising, and what does it mean for my mortgage?",
+      "How do today's gilt yields compare with the 2022 mini-budget crisis?",
+      "What would happen to my gilt fund if gilt yields jumped 2 points like in 2022?",
+      "If gilt yields fell by 1 point, how would mortgage rates and annuity income change?",
+      "What are gilts, and why are gains on them free of capital gains tax?",
+      "Why are some people buying low-coupon gilts instead of using savings accounts?",
+      "How do higher gilt yields change annuity rates for people retiring now?",
+      "Gilts, Premium Bonds and a savings account: how do they compare for safe money?",
+    ),
+    ...q(
+      "in",
+      "What is the 10-year G-sec yield in India, and what moves it?",
+      "How can I buy Indian government bonds through RBI Retail Direct?",
+      "Gilt funds or fixed deposits: how do they compare when yields change?",
+      "How do RBI rate decisions affect bond yields and debt mutual funds?",
+    ),
+    ...q(
+      "us",
+      "What does a 5% 10-year Treasury yield mean for my bond fund?",
+      "How do Treasury yields today compare with 2007 and 2023?",
+      "How did long Treasuries do in the 1994 bond sell-off and in 2022?",
+      "If Treasury yields fell 1 point, what would happen to mortgage rates?",
+      "Treasury bills, bond ETFs or a high-yield savings account: how do they compare?",
+      "How do I buy Treasuries through TreasuryDirect?",
+    ),
+  ],
+  // These run the overpay-or-invest comparison, or the retirement planner with a mortgage.
+  mortgages: [
+    ...q(
+      "any",
+      "How does the interest rate on my mortgage decide whether overpaying or investing comes out ahead?",
+      "What's the break-even investment return for overpaying a 5% mortgage?",
+      "Why do some people pay off their mortgage early even when investing might earn more?",
+    ),
+    ...q(
+      "uk",
+      "Overpaying my mortgage or investing in an ISA: how do they compare?",
+      "I owe £180,000 at 4.5% with 22 years left. What if I overpaid £300 a month instead of investing it?",
+      "I have £20,000 in savings. Paying a chunk off my mortgage or investing it: how do they compare?",
+      "Overpaying my mortgage or paying more into my pension: what are the trade-offs?",
+      "My fixed rate ends next year. How does a higher rate change the case for overpaying?",
+      "How much do UK lenders let you overpay each year without an early repayment charge?",
+      "What's the difference between overpaying to shorten the term and overpaying to lower the payment?",
+      "I'm 45 with 20 years left on my mortgage. Could I be mortgage-free by 60 if I overpaid?",
+    ),
+    ...q(
+      "in",
+      "Prepaying my home loan or investing in a SIP: how do they compare?",
+      "I have a ₹40 lakh home loan at 8.5%. What if I prepaid ₹10,000 a month instead of investing it?",
+      "My annual bonus is ₹3 lakh. Prepaying my home loan or investing it in mutual funds: how do they compare?",
+      "How does the old tax regime's home loan interest deduction change the case for prepaying?",
+      "Can banks charge me for prepaying a floating-rate home loan?",
+      "Should prepaying a home loan shorten the tenure or reduce the EMI: what's the difference?",
+    ),
+    ...q(
+      "us",
+      "Paying off my mortgage early or investing in index funds: how do they compare?",
+      "I have a 3% mortgage locked in. How does that change paying it off early versus investing?",
+      "Extra mortgage payments or maxing out my 401(k) and IRA: what are the trade-offs?",
+      "Does the mortgage interest deduction matter if I take the standard deduction?",
+    ),
+  ],
+  // These run the valuation tool: what the price assumes, the P/E against its past, and peers.
+  valuation: [
+    ...q(
+      "any",
+      "Is Nvidia's share price expensive compared with its growth?",
+      "How would a value investor look at Coca-Cola today?",
+      "What is a margin of safety, and what would it mean for Apple's share price?",
+      "Which of Visa and Mastercard looks better value on PEG and free cash flow?",
+      "How do you value a company that isn't profitable yet, like Rivian?",
+      "What growth is priced into Apple's share price?",
+      "Is Microsoft's valuation high compared with its own history?",
+      "What would Tesla need to deliver to justify its share price?",
+      "How does Amazon's valuation compare with Alphabet and Microsoft?",
+      "Is Meta cheap or expensive compared with its past P/E?",
+      "What does Coca-Cola's share price assume about future growth?",
+      "How is JPMorgan valued compared with other big US banks?",
+      "Why does Costco trade on a much higher P/E than Walmart?",
+      "What is a reverse DCF, and what does it say about Netflix?",
+      "Is Eli Lilly's share price pricing in a lot of growth?",
+    ),
+    ...q(
+      "uk",
+      "Is Rolls-Royce's share price expensive after its big rise?",
+      "How is National Grid valued, and how has its dividend grown against SSE and United Utilities?",
+      "How would a value investor look at Unilever, including its 10-year dividend record?",
+      "How do you value a mining company like Rio Tinto when profits swing with commodity prices?",
+      "What growth is priced into AstraZeneca's share price?",
+      "How is Lloyds valued compared with Barclays and NatWest?",
+      "Is Shell cheaper than BP, Exxon, and Chevron on cash flow?",
+      "Is Tesco's P/E high or low compared with its own history?",
+      "Why do UK shares trade on lower valuations than US shares?",
+      "What does Unilever's share price assume about future growth?",
+      "How does HSBC's price/book compare with its return on equity?",
+      "Is Diageo cheap now compared with its past P/E?",
+      "How is BAE Systems valued compared with other defence companies?",
+    ),
+    ...q(
+      "in",
+      "What growth is priced into Reliance Industries' share price?",
+      "How would a value investor look at ITC, including its dividend record?",
+      "How should a bank like HDFC Bank be valued, and how does it compare with ICICI Bank?",
+      "Is HDFC Bank's valuation high compared with ICICI Bank and Kotak?",
+      "Is TCS cheap or expensive compared with its own past P/E?",
+      "How is Infosys valued compared with TCS, Wipro, and HCLTech?",
+      "Why do Indian consumer companies like Hindustan Unilever trade on such high P/Es?",
+      "What would Bharti Airtel need to deliver to justify its share price?",
+      "Is ITC's valuation low compared with other FMCG companies?",
+      "Is Bajaj Finance expensive compared with its return on equity?",
+      "How is Maruti Suzuki valued compared with other carmakers?",
+    ),
+  ],
+  compare: [
+    ...q(
+      "any",
+      "How do Apple's and Microsoft's valuations compare right now?",
+      "How do Nvidia and AMD compare on growth and valuation?",
+      "How do Visa and Mastercard compare?",
+      "Compare Coca-Cola and PepsiCo on growth and dividends.",
+      "How does a world tracker compare with an S&P 500 tracker on risk and return?",
+      "How do Amazon and Alphabet compare on valuation and growth?",
+    ),
+    ...q(
+      "uk",
+      "Compare Shell and BP as long-term holdings.",
+      "Compare Lloyds, NatWest, and Barclays on profits and dividends.",
+      "Compare Tesco and Sainsbury's on profits and dividends.",
+      "How does the FTSE 100 compare with the S&P 500 over 10 years?",
+      "Compare AstraZeneca and GSK as pharmaceutical businesses.",
+      "Compare Unilever and Procter & Gamble.",
+      "Compare Vanguard LifeStrategy 80 with a 100% global equity fund.",
+    ),
+    ...q(
+      "in",
+      "How do HDFC Bank and ICICI Bank compare on growth and valuation?",
+      "Compare TCS and Infosys as long-term holdings.",
+      "Compare Asian Paints and Berger Paints.",
+      "Compare a Nifty 50 index fund with a Nifty Next 50 index fund.",
+      "Compare Maruti Suzuki and Mahindra & Mahindra.",
+    ),
+  ],
+  markets: [
+    ...q(
+      "any",
+      "How have interest rate decisions affected the stock market this year?",
+      "Why is the US stock market so concentrated in a few big tech companies?",
+      "What happened in markets this week, in plain English?",
+      "What is the 'Magnificent Seven', and how much of the S&P 500 are they?",
+      "How have gold prices moved this year, and why?",
+      "What do bond yields tell us about the economy right now?",
+      "Which sectors of the S&P 500 have done best and worst this year?",
+    ),
+    ...q(
+      "uk",
+      "What's moving the FTSE 100 this week?",
+      "How is the pound doing against the dollar, and why does it matter to investors?",
+      "How are UK shares valued compared with US shares right now?",
+      "How is inflation affecting UK company profits?",
+    ),
+    ...q(
+      "in",
+      "What's the difference between the Nifty 50 and the Sensex?",
+      "What's moving the Nifty 50 this week?",
+      "Why do Indian shares trade at higher valuations than many other markets?",
+      "How have foreign investors' sales affected Indian markets this year?",
+      "How do RBI interest rate decisions affect Indian shares?",
+    ),
+  ],
+  risk: [
+    ...q(
+      "any",
+      "How far did the stock market fall in 2008 and 2020, and how long did recovery take?",
+      "What's the biggest risk of owning only one or two shares?",
+      "What is a stock market crash, and how often have they happened?",
+      "How do I tell if my portfolio is too concentrated?",
+      "What is rebalancing, and how often do people do it?",
+      "How have 60/40 portfolios held up through recent market falls?",
+    ),
+    ...q(
+      "uk",
+      "How do I think about currency risk when investing in US shares from the UK?",
+      "How volatile is the Nasdaq compared with the FTSE 100?",
+    ),
+    ...q(
+      "in",
+      "How does the rupee's value against the dollar affect Indian investors?",
+      "How far did the Nifty 50 fall in 2020, and how long did recovery take?",
+      "What happens if you stop a SIP when markets fall?",
+      "How risky are small-cap funds in India?",
+    ),
+  ],
+  retirement: [
+    ...q(
+      "any",
+      "What is the 4% rule for retirement withdrawals, and is it still sensible?",
+      "How does a target-date or lifestyle fund change as I get closer to retirement?",
+      "How should the mix of shares and bonds change as I get older?",
+      "What is sequence-of-returns risk, and why does it matter near retirement?",
+      "How do I estimate how much income I'll need in retirement?",
+      "How much difference does starting to save for retirement at 25 instead of 35 make?",
+      "What are the most common retirement-saving mistakes beginners make?",
+      "How should I factor inflation into retirement planning?",
+      "What is a dividend-income portfolio, and what are its risks for retirees?",
+    ),
+    ...q(
+      "uk",
+      "My mortgage runs until I'm 65 but I want to retire at 60. How much more would I need?",
+      "How much do I need in my pension to retire comfortably in the UK?",
+      "How does pension tax relief work for basic-rate and higher-rate taxpayers?",
+      "Workplace pension vs SIPP: what's the difference?",
+      "When can I take my State Pension, and how much is the full new State Pension?",
+      "How do I check my State Pension forecast and fill gaps in my National Insurance record?",
+      "Pension or Lifetime ISA for retirement: what are the trade-offs?",
+      "How much tax-free cash can I take from my pension?",
+      "What is pension drawdown, and how is it different from an annuity?",
+      "What affects annuity rates, and how have they changed recently?",
+      "What's the earliest age I can access my private pension?",
+      "What happens to my workplace pension if I change jobs?",
+      "How do I find and combine old workplace pensions?",
+      "What is the pension annual allowance, and what happens if I go over it?",
+      "How will pensions be treated for inheritance tax?",
+      "I'll get £900 a month in rent from a flat when I retire. How big a pension pot would I still need?",
+    ),
+    ...q(
+      "in",
+      "How does NPS work, and what are its tax benefits?",
+      "EPF vs PPF vs NPS for retirement: what are the trade-offs?",
+      "How big a retirement corpus would I need to retire at 60 in India?",
+      "What happens to my EPF when I change jobs?",
+      "What's the difference between NPS Tier 1 and Tier 2 accounts?",
+      "What are the rules for withdrawing from NPS at 60?",
+      "What is VPF, and how does it compare with PPF?",
+      "How does the Senior Citizens Savings Scheme work?",
+      "How does India's inflation affect how much I need for retirement?",
+      "What is the Atal Pension Yojana, and who is it for?",
+      "How are EPF withdrawals and interest taxed?",
+      "How do retirement-focused mutual funds work in India?",
+      "I'll have ₹30,000 a month in rent after retiring at 60. How big a corpus would I still need?",
+    ),
+    ...q(
+      "us",
+      "How much should I put in my 401(k) to get the full employer match?",
+      "What are this year's 401(k) and IRA contribution limits?",
+      "When do required minimum distributions start, and how do they work?",
+      "How does the age I claim Social Security change my monthly benefit?",
+      "How does a Roth conversion work, and what are the tax trade-offs?",
+      "If I'll have $1,500 a month in rental income in retirement, how much do I need in my 401(k)?",
+    ),
+  ],
+  alternatives: [
+    ...q(
+      "any",
+      "What are alternative investments, and how risky are they?",
+      "How do gold ETFs work, and how has gold done compared with shares?",
+      "What are REITs, and how do they pay income?",
+      "How do commodity funds work, and why do they swing so much?",
+      "What is private equity, and can ordinary investors get access to it?",
+      "How do infrastructure funds work, and what drives their returns?",
+      "What is peer-to-peer lending, and what are the risks?",
+      "How does Bitcoin's volatility compare with shares and gold?",
+      "How much of a portfolio do people usually keep in alternatives, and why?",
+      "What are the risks of cryptocurrency for a beginner?",
+      "How have silver prices moved this year, and why?",
+      "How do inflation-linked bonds work?",
+    ),
+    ...q(
+      "uk",
+      "How have UK REITs like Land Securities and British Land performed?",
+      "How do investment trusts like 3i give access to private equity?",
+      "Can I hold gold in a Stocks and Shares ISA, and how?",
+      "What are crypto ETNs on the London Stock Exchange, and what are the risks?",
+      "How do UK renewable energy trusts like Greencoat UK Wind work?",
+      "What are index-linked gilts, and how do they protect against inflation?",
+      "How has the iShares Physical Gold ETC performed over 10 years?",
+      "What are venture capital trusts (VCTs), and what are their tax reliefs and risks?",
+      "How does buy-to-let property compare with REITs?",
+      "What are Premium Bonds, and how do the prize odds work?",
+    ),
+    ...q(
+      "in",
+      "What are Sovereign Gold Bonds, and how do they compare with gold ETFs?",
+      "How do REITs and InvITs work in India?",
+      "How have Indian gold ETFs like Nippon India Gold BeES performed?",
+      "What are silver ETFs in India, and how volatile are they?",
+      "How do corporate bonds and debt funds compare with fixed deposits?",
+      "How is cryptocurrency taxed in India?",
+      "How do international fund of funds work for Indian investors?",
+      "How does real estate compare with equity mutual funds over the long term in India?",
+    ),
+    ...q(
+      "us",
+      "How do spot Bitcoin ETFs work in the US?",
+      "How have US REITs done as interest rates changed?",
+      "How does gold compare with Treasury bonds as a safe haven?",
+    ),
+  ],
+  // Capital gains, rental income, and passing money on.
+  legacy: [
+    ...q(
+      "any",
+      "What is capital gains tax, and how is it different from income tax?",
+      "How does writing a will help with passing on investments?",
+      "What happens to my investments when I die if I haven't named anyone?",
+    ),
+    ...q(
+      "uk",
+      "How much inheritance tax is charged, and what are the allowances?",
+      "How does the residence nil-rate band work when passing a home to children?",
+      "How will unused pensions be counted for inheritance tax from April 2027?",
+      "How does the seven-year rule work for gifts and inheritance tax?",
+      "Which gifts are free of inheritance tax straight away?",
+      "How is capital gains tax worked out when I sell a buy-to-let property?",
+      "How long do I have to report and pay capital gains tax on a UK property sale?",
+      "How is rental income taxed, and what changes for landlords in April 2027?",
+      "How does the £1,000 property allowance work for small rental incomes?",
+      "Do I pay capital gains tax when I sell shares held outside an ISA?",
+      "Can married couples pass assets between them free of capital gains and inheritance tax?",
+    ),
+    ...q(
+      "in",
+      "Is there an inheritance tax in India?",
+      "How is rental income taxed in India, and what is the 30% deduction?",
+      "How is capital gains tax charged when I sell a house or flat in India?",
+      "How are inherited shares, mutual funds or property taxed when I sell them in India?",
+      "What's the difference between a nominee and a legal heir for mutual funds and demat accounts?",
+      "How do I add or update a nominee on my mutual funds and demat account?",
+      "Which gifts are tax-free in India, and when is a gift taxed?",
+      "How is home loan interest on a rented-out property treated under the new tax regime?",
+    ),
+    ...q(
+      "us",
+      "How does the federal estate tax work, and who actually pays it?",
+      "What is a stepped-up basis on inherited stocks or property?",
+      "How much can I give each year without filing a gift tax return?",
+      "What are the rules for an inherited IRA, including the 10-year rule?",
+      "How is capital gains tax charged when I sell my home?",
+      "How is rental income taxed, and what expenses can landlords deduct?",
+      "What's the difference between short-term and long-term capital gains tax?",
+    ),
+  ],
+};
+
+export const ALL_STARTER_TEXTS = new Set(Object.values(STARTER_QUESTIONS).flatMap((qs) => qs.map((x) => x.text)));
+
+const shuffled = <T,>(items: T[]) => {
+  const out = [...items];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+};
+
+export const suits = (where: Where, locale: Locale) => locale === null || where === "any" || where === locale;
+
+const WHERE_OF = new Map(Object.values(STARTER_QUESTIONS).flatMap((qs) => qs.map((x) => [x.text, x.where] as const)));
+/** Who a suggestion suits, or undefined for text that isn't one of Tickerwise's suggestions. */
+export const whereOf = (text: string) => WHERE_OF.get(text);
+
+/** Up to `count` questions from one topic, suited to the person's country, in random order. */
+export const questionsFor = (topic: Topic, locale: Locale, count: number) =>
+  shuffled(STARTER_QUESTIONS[topic].filter((x) => suits(x.where, locale)))
+    .slice(0, count)
+    .map((x) => x.text);
+
+/** One question each from `count` different topics, suited to the person's country, always
+ *  starting with a monthly-investing one (it shows a chart), then bonds, valuation and mortgages, then any
+ *  priority topics (such as retirement for someone saving for it), then the rest in random order. */
+export function pickStarters(count: number, locale: Locale, priority: Topic[] = []): string[] {
+  const pick = (topic: Topic) => shuffled(STARTER_QUESTIONS[topic].filter((x) => suits(x.where, locale)))[0]?.text;
+  const first: Topic[] = ["monthly", "bonds", "valuation", "mortgages"];
+  const others = shuffled((Object.keys(STARTER_QUESTIONS) as Topic[]).filter((t) => !first.includes(t) && !priority.includes(t)));
+  return ([...first, ...priority, ...others] as Topic[])
+    .map(pick)
+    .filter((text): text is string => Boolean(text))
+    .slice(0, count);
+}

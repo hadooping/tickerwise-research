@@ -1,0 +1,1112 @@
+/* Retirement planner card: in a chat answer and in its own dialog. */
+.card {
+  /* The same validated series colours as the growth chart. */
+  --series-1: light-dark(#2a78d6, #3987e5);
+  --series-2: light-dark(#eb6834, #d95926);
+  --series-3: light-dark(#1baf7a, #199e70);
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.head h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.segmented {
+  display: inline-flex;
+  padding: 2px;
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.segmented button {
+  padding: 5px 12px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.segmented button[aria-pressed="true"] {
+  background: var(--bg);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.12);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  gap: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field label,
+.select {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.hint {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.inputs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.inputs input[type="range"] {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--accent);
+}
+
+.number {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text-muted);
+}
+
+.number input {
+  width: 84px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: right;
+}
+
+.number input:focus {
+  outline: none;
+}
+
+.number:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.select select {
+  margin-top: 4px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 400;
+}
+
+.more summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.more[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.results {
+  min-width: 0;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.tile strong {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tileLabel {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.good .tileLabel {
+  color: var(--up);
+  font-weight: 600;
+}
+
+.short .tileLabel {
+  color: var(--error);
+  font-weight: 600;
+}
+
+.close {
+  margin: 10px 0 0;
+}
+
+.chart {
+  position: relative;
+  margin-top: 12px;
+}
+
+.chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: pan-y;
+}
+
+.chart svg:focus-visible {
+  outline: 2px solid var(--accent);
+  border-radius: 6px;
+}
+
+.grid {
+  stroke: var(--border);
+  stroke-width: 1;
+}
+
+.axis {
+  fill: var(--text-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.target {
+  stroke: var(--text);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+}
+
+.targetLabel {
+  fill: var(--text);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.crosshair {
+  stroke: var(--text-faint);
+  stroke-width: 1;
+}
+
+.dot {
+  stroke: var(--bg);
+  stroke-width: 2;
+}
+
+.tooltip {
+  position: absolute;
+  top: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.12);
+  font-size: 12.5px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.tooltipHead {
+  margin-bottom: 4px;
+  color: var(--text-muted);
+}
+
+.tooltipRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.key {
+  display: inline-block;
+  width: 10px;
+  height: 3px;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+.keyTarget {
+  background: repeating-linear-gradient(90deg, var(--text) 0 4px, transparent 4px 6px);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.table {
+  width: 100%;
+  margin-top: 14px;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.table caption {
+  margin-bottom: 4px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.table th,
+.table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+}
+
+.table th[scope="row"] {
+  text-align: left;
+  white-space: nowrap;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.table thead th {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.net td,
+.net th[scope="row"] {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.ask {
+  margin-top: 12px;
+  padding: 7px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ask:hover:not(:disabled) {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.ask:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.note {
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.note a {
+  color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tiles {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tile {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 8px;
+  }
+
+  .tile .hint {
+    flex-basis: 100%;
+  }
+}
+
+.dialog {
+  position: relative;
+  margin: auto;
+  width: min(880px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 24px 64px rgb(0 0 0 / 0.25);
+}
+
+.dialog::backdrop {
+  background: rgb(0 0 0 / 0.35);
+}
+
+.dialog .card {
+  margin: 0;
+  padding: 20px;
+  border: 0;
+}
+
+.dialog .head {
+  padding-right: 36px;
+}
+
+.dialogClose {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dialogClose:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* Planner dialog tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 14px 56px 0 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tabs button {
+  padding: 8px 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.tabs button[aria-selected="true"] {
+  border-bottom-color: var(--accent);
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Valuation card: tabs in the card's header */
+.cardTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.cardTabs button {
+  padding: 6px 10px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.cardTabs button[aria-selected="true"] {
+  border-bottom-color: var(--accent);
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Inheritance tax estimate */
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.check input {
+  margin-top: 2px;
+  accent-color: var(--accent);
+}
+
+.check > span {
+  display: flex;
+  flex-direction: column;
+}
+
+.gifts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.giftsLabel {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.giftRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.giftRow .number input {
+  width: 72px;
+}
+
+.giftRow select {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+}
+
+.remove {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.linkish {
+  align-self: flex-start;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.split {
+  display: flex;
+  gap: 2px;
+  height: 14px;
+  margin-top: 16px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.split span {
+  flex-basis: 0;
+  min-width: 2px;
+}
+
+/* Bond yields card: past spells at today's level, and numbered world events */
+.card {
+  --band: light-dark(rgb(42 120 214 / 0.1), rgb(57 135 229 / 0.16));
+}
+
+.band {
+  fill: var(--band);
+}
+
+.eventMark {
+  cursor: default;
+}
+
+.eventMark circle {
+  stroke: var(--series-2);
+  stroke-width: 1.5;
+}
+
+.eventMark text {
+  font-size: 10px;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.events {
+  margin: 12px 0 0;
+  padding-left: 22px;
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.events li::marker {
+  color: var(--series-2);
+  font-weight: 700;
+}
+
+.events strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.eventOn {
+  color: var(--text);
+}
+
+/* Valuation card: how the company is valued, value investing ideas, and the quality checklist */
+.methodNote {
+  margin: -4px 0 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 13.5px;
+}
+
+.concepts {
+  margin: 0 0 14px;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13.5px;
+}
+
+.qualityIcon {
+  display: inline-block;
+  width: 16px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.quality_good {
+  color: var(--up);
+}
+
+.quality_ok {
+  color: light-dark(#b25e09, #eda100);
+}
+
+.quality_weak {
+  color: var(--error);
+}
+
+.qualityCell {
+  text-align: left !important;
+  white-space: normal;
+}
+
+.qualityCell .hint {
+  display: block;
+  margin-top: 2px;
+}
+
+/* Analyst views (valuation card): consensus slider, rating columns, target slider, rating badges */
+.analystBlock {
+  margin: 16px 0 6px;
+}
+
+.analystBlock h4 {
+  margin: 0 0 10px;
+  font-size: 15px;
+}
+
+.gauge {
+  margin: 30px 6px 4px;
+}
+
+.gaugeBar {
+  position: relative;
+  height: 12px;
+  border-radius: 6px;
+}
+
+.gaugeMarker {
+  position: absolute;
+  top: -6px;
+  width: 4px;
+  height: 24px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: var(--text);
+  box-shadow: 0 0 0 2px var(--bg);
+}
+
+.gaugeMarker span {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.gaugeGhost {
+  position: absolute;
+  top: -3px;
+  width: 4px;
+  height: 18px;
+  margin-left: -2px;
+  border-radius: 2px;
+  background: transparent;
+  border: 1.5px dashed var(--text-muted);
+}
+
+.gaugeScale {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.ratingCols {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.ratingCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.ratingTrack {
+  position: relative;
+  width: 100%;
+  max-width: 64px;
+  height: 110px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.ratingBar {
+  position: relative;
+  width: 70%;
+  min-height: 3px;
+  border-radius: 6px 6px 2px 2px;
+}
+
+.ratingGhost {
+  position: absolute;
+  bottom: 0;
+  left: 8%;
+  width: 84%;
+  border: 1.5px dashed var(--text-faint);
+  border-radius: 6px 6px 2px 2px;
+}
+
+.ratingCount {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.ratingLabel {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.targetSlider {
+  position: relative;
+  margin: 8px 40px 4px;
+}
+
+.targetLabelsTop,
+.targetLabelsBottom {
+  position: relative;
+  height: 20px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.targetLabelsTop span,
+.targetLabelsBottom span {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.targetLabelsTop span {
+  color: var(--text-muted);
+}
+
+.targetLabelsBottom span {
+  font-weight: 700;
+  color: var(--series-2);
+}
+
+.targetTrack {
+  position: relative;
+  height: 24px;
+}
+
+.targetTrack::before {
+  content: "";
+  position: absolute;
+  top: 11px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border);
+}
+
+.targetSpan {
+  position: absolute;
+  top: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--series-1) 45%, transparent);
+}
+
+.targetTick {
+  position: absolute;
+  top: 5px;
+  width: 2px;
+  height: 14px;
+  margin-left: -1px;
+  background: var(--series-1);
+}
+
+.targetMid {
+  position: absolute;
+  top: 2px;
+  width: 4px;
+  height: 20px;
+  margin-left: -2px;
+  border-radius: 2px;
+}
+
+.targetToday {
+  position: absolute;
+  top: 5px;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  border-radius: 7px;
+  background: var(--series-2);
+  border: 2px solid var(--bg);
+}
+
+.headActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* The ⤢ button above a card's chart */
+.chartTools {
+  display: flex;
+  justify-content: flex-end;
+  margin: 8px 0 -8px;
+}
+
+.targetUp {
+  color: var(--up);
+  font-weight: 700;
+}
+
+.targetDown {
+  color: var(--error);
+  font-weight: 700;
+}
+
+.pill {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.targetCell .hint {
+  display: block;
+}
+
+/* A card's "Ask Tickerwise" button, with a note when today's questions have run out */
+.askGate .hint {
+  display: block;
+  margin-top: 6px;
+  max-width: 46ch;
+}
+
+/* Change in each rating since last month, under its column */
+.ratingDelta {
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.rating_better {
+  color: var(--up);
+}
+
+.rating_worse {
+  color: var(--error);
+}
+
+.rating_flat {
+  color: var(--text-faint);
+}
+
+/* Analysts' views compared across companies */
+.peerAnalysts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.peerAnalystRow {
+  display: grid;
+  grid-template-columns: minmax(0, 190px) minmax(0, 1fr) 72px;
+  align-items: center;
+  gap: 12px;
+  font-size: 13.5px;
+}
+
+.peerAnalystMain .peerAnalystName {
+  font-weight: 700;
+}
+
+.peerAnalystName {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.peerAnalystName .hint {
+  font-weight: 400;
+}
+
+.peerAnalystBar {
+  display: flex;
+  gap: 2px;
+  height: 22px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.peerAnalystBar span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3px;
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.peerAnalystRow > span:last-child {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* P/E in context: one bar for the company, its own usual, its competitors and its home market. */
+.subhead {
+  margin: 20px 0 4px;
+  font-size: 0.95rem;
+}
+
+.ladder {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.ladder > div {
+  display: grid;
+  grid-template-columns: minmax(110px, 34%) 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.ladderLabel {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.ladderLabel small,
+.ladderValue small {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+
+.ladderLabel small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ladderTrack {
+  height: 14px;
+  border-radius: 7px;
+  background: var(--surface-hover);
+  overflow: hidden;
+}
+
+.ladderBar {
+  display: block;
+  height: 100%;
+  border-radius: 7px;
+  background: var(--text-faint);
+}
+
+.ladderMain .ladderBar {
+  background: var(--accent);
+}
+
+.ladderMain .ladderLabel {
+  font-weight: 600;
+}
+
+.ladderValue {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 520px) {
+  .ladder > div {
+    grid-template-columns: 1fr auto;
+  }
+  .ladderTrack {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+}
+
+/* Analysts' views at a glance, above every tab of the valuation card except their own. */
+.analystStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin: 4px 0 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.88rem;
+}
+
+.stripLabel {
+  font-weight: 600;
+}
+
+.stripBar {
+  display: flex;
+  width: 120px;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--surface-hover);
+}
+
+.stripBar > span {
+  display: block;
+  height: 100%;
+}
+
+.stripText {
+  flex: 1 1 220px;
+  color: var(--text-muted);
+}
+
+.stripUp {
+  color: var(--up);
+}
+
+.stripDown {
+  color: var(--error);
+}
+
+.stripLink {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+}
+
+.stripLink:hover {
+  text-decoration: underline;
+}

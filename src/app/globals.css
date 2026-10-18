@@ -1,0 +1,103 @@
+:root {
+  /* Each colour is light-dark(light, dark); color-scheme picks one. The theme setting
+     (data-theme on <html>) forces light or dark; otherwise the device setting is used. */
+  color-scheme: light dark;
+  --bg: light-dark(#fcfcf9, #191a1a);
+  --surface: light-dark(#f3f3ee, #202222);
+  --surface-hover: light-dark(#ebebe5, #2a2c2c);
+  --border: light-dark(#e3e3dc, #2f3131);
+  --text: light-dark(#13343b, #e8e8e6);
+  --text-muted: light-dark(#64645f, #9a9e9e);
+  --text-faint: light-dark(#9a9a93, #6b6f6f);
+  --accent: light-dark(#20808d, #2aa3b0);
+  --accent-hover: light-dark(#1a6b76, #3bb5c2);
+  --on-accent: light-dark(#ffffff, #0e1414);
+  --error: light-dark(#b42318, #f97066);
+  --up: light-dark(#1a7f37, #3fb950);
+
+  --font-sans: var(--font-geist), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Reading preferences from Settings > Appearance. */
+  --font-body: var(--font-sans);
+  --reading-size: 16px;
+  --reading-width: 760px;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+:root[data-font="serif"] {
+  --font-body: var(--font-serif), Georgia, "Times New Roman", serif;
+}
+
+:root[data-font="readable"] {
+  --font-body: var(--font-readable), Verdana, sans-serif;
+}
+
+:root[data-size="small"] {
+  --reading-size: 15px;
+}
+
+:root[data-size="large"] {
+  --reading-size: 18px;
+}
+
+:root[data-size="xl"] {
+  --reading-size: 20px;
+}
+
+:root[data-width="narrow"] {
+  --reading-width: 640px;
+}
+
+:root[data-width="wide"] {
+  --reading-width: 920px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+code,
+pre {
+  font-family: var(--font-mono);
+}

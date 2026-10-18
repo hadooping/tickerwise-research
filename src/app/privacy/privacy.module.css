@@ -1,0 +1,185 @@
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px 16px 80px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.page h1 {
+  font-size: 32px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-top: 28px;
+}
+
+.page h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 32px 0 8px;
+}
+
+.page p,
+.page li {
+  font-size: 15.5px;
+  color: var(--text);
+}
+
+.page p + p {
+  margin-top: 12px;
+}
+
+.page ul {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.page a {
+  color: var(--accent);
+}
+
+.updated {
+  margin: 4px 0 24px;
+  font-size: 13px !important;
+  color: var(--text-faint) !important;
+}
+
+.back {
+  font-size: 14px;
+  text-decoration: none;
+}
+
+/* Help page */
+.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.toc a {
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 13.5px;
+  text-decoration: none;
+}
+
+.page section {
+  scroll-margin-top: 16px;
+}
+
+.faq {
+  border-bottom: 1px solid var(--border);
+}
+
+.faq summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  font-size: 15.5px;
+  font-weight: 500;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: "+";
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.faq[open] summary::after {
+  content: "–";
+}
+
+.answer {
+  padding: 0 0 14px;
+}
+
+.answer p:first-child,
+.answer ul:first-child {
+  margin-top: 0;
+}
+
+.footnote {
+  margin-top: 40px;
+  font-size: 13.5px !important;
+  color: var(--text-muted) !important;
+}
+
+.answer ul + p,
+.answer p + ul {
+  margin-top: 12px;
+}
+
+/* Feedback page */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form label {
+  margin-top: 14px;
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.form textarea,
+.form input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+}
+
+.form textarea {
+  resize: vertical;
+}
+
+.form textarea:focus-visible,
+.form input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.optional,
+.count {
+  font-weight: 400;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.count {
+  align-self: flex-end;
+}
+
+.error {
+  color: var(--error) !important;
+}
+
+.submit {
+  align-self: flex-start;
+  margin-top: 16px;
+  padding: 9px 20px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+}
+
+.submit:disabled {
+  opacity: 0.5;
+}

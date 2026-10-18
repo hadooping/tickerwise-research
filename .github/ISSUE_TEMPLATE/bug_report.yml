@@ -1,0 +1,30 @@
+name: Something isn't right
+description: A wrong figure, a broken page, or an answer that doesn't make sense
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Tickerwise. Issues are **public**: please leave out personal or financial details such as account numbers, holdings, income or your email address.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you asked or clicked, what you saw, and what you expected instead.
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where?
+      description: The page or card, for example "valuation card, What analysts say" or "retirement planner".
+  - type: input
+    id: device
+    attributes:
+      label: Device and browser
+      description: For example "iPhone, Safari" or "Mac, Chrome".
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot
+      description: If it helps, paste one here (crop out anything personal).
