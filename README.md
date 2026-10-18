@@ -32,7 +32,7 @@ npm run lint
 npx tsc --noEmit
 ```
 
-Built with Next.js (App Router), React and TypeScript, with plain CSS modules and hand-drawn SVG charts. Deployed on Vercel.
+Built with Next.js (App Router), React and TypeScript, with plain CSS modules and hand-drawn SVG charts. Deployed on Vercel from this repository's `main` branch.
 
 ## Reporting a problem or suggesting an idea
 
