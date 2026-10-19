@@ -14,7 +14,7 @@ export default function Privacy() {
         ← Back to Tickerwise
       </Link>
       <h1>Privacy</h1>
-      <p className={styles.updated}>Last updated 17 October 2026</p>
+      <p className={styles.updated}>Last updated 19 October 2026</p>
 
       <p>
         Tickerwise is a research tool for investing and personal finance in the US, UK and India: stocks, funds, bonds,
@@ -35,6 +35,9 @@ export default function Privacy() {
         the ID nor the address is stored: we keep only scrambled codes made from them with a secret key (keyed hashes),
         which can&apos;t be turned back. With the same scrambled code we record how much computing each answer took (its
         size in words processed and how many web searches it ran, never its content), to see what Tickerwise costs to run.
+        We also record the steps each answer took, to find slow or failing ones: which lookups and web searches ran, with
+        the short labels you see while it works (such as &ldquo;Searching: Lloyds news&rdquo;), how long each took and
+        how much computing it used. Your question, the answer and who asked aren&apos;t included.
         The counts aren&apos;t linked to your questions or to who you are. Clearing
         your browser&apos;s site data removes the ID.
       </p>
@@ -120,6 +123,9 @@ export default function Privacy() {
         </li>
         <li>
           <strong>Supabase</strong> stores accounts and saved threads.
+        </li>
+        <li>
+          <strong>Langfuse</strong> receives the steps each answer took (described above), stored in the EU.
         </li>
         <li>
           <strong>Vercel</strong> hosts the site and keeps short-lived request logs, such as IP addresses, for
