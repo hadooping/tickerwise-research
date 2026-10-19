@@ -35,11 +35,14 @@ export default function Privacy() {
         the ID nor the address is stored: we keep only scrambled codes made from them with a secret key (keyed hashes),
         which can&apos;t be turned back. With the same scrambled code we record how much computing each answer took (its
         size in words processed and how many web searches it ran, never its content), to see what Tickerwise costs to run.
-        We also record the steps each answer took, to find slow or failing ones: which lookups and web searches ran, with
-        the short labels you see while it works (such as &ldquo;Searching: Lloyds news&rdquo;), how long each took and
-        how much computing it used. Your question, the answer and who asked aren&apos;t included.
         The counts aren&apos;t linked to your questions or to who you are. Clearing
         your browser&apos;s site data removes the ID.
+      </p>
+      <p>
+        With that record we also keep the steps each answer took, to find slow or failing ones: which lookups and web
+        searches ran, how long each took and how much computing it used, with the short labels you see while it works.
+        A label can include the words searched for (such as &ldquo;Searching: Lloyds news&rdquo;), but the full text of
+        your question, the data that came back and the answer aren&apos;t kept.
       </p>
 
       <h2>If you sign in with Google</h2>
@@ -122,10 +125,7 @@ export default function Privacy() {
           identity.
         </li>
         <li>
-          <strong>Supabase</strong> stores accounts and saved threads.
-        </li>
-        <li>
-          <strong>Langfuse</strong> receives the steps each answer took (described above), stored in the EU.
+          <strong>Supabase</strong> stores accounts, saved threads, and the steps each answer took.
         </li>
         <li>
           <strong>Vercel</strong> hosts the site and keeps short-lived request logs, such as IP addresses, for
