@@ -159,7 +159,8 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
             <li>
               <strong>UK gilt yields</strong> come from the Bank of England, about two working days behind; US Treasury
               yields come from the Federal Reserve through FRED, the St. Louis Fed&apos;s data service, about one working
-              day behind.
+              day behind; Indian 10-year yields are the OECD&apos;s monthly averages, also through FRED, about one to two
+              months behind.
             </li>
             <li>
               <strong>Rules and allowances</strong> come from about 100 official pages, such as GOV.UK, FSCS, India&apos;s

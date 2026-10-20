@@ -23,7 +23,7 @@ export interface BondEpisode {
 }
 
 export interface BondsData {
-  country: "uk" | "us";
+  country: "uk" | "us" | "in"; // India: monthly averages of the 10-year only, from 2011
   name: string;
   source: string;
   as_of: string;
@@ -295,7 +295,7 @@ export default function BondCard({ data, onAsk, disabled = false }: { data: Bond
   const short = d.curve[0];
   const long = d.curve[d.curve.length - 1];
   const inverted = short && long && short.now > long.now;
-  const bond = d.country === "uk" ? "gilt" : "Treasury";
+  const bond = d.country === "uk" ? "gilt" : d.country === "in" ? "G-sec" : "Treasury";
 
   return (
     <section className={styles.card} aria-label={d.name}>
@@ -371,28 +371,31 @@ export default function BondCard({ data, onAsk, disabled = false }: { data: Bond
         </div>
       )}
 
-      <table className={styles.table}>
-        <caption>The yield curve: what the government pays to borrow for different lengths of time</caption>
-        <thead>
-          <tr>
-            <th scope="col" />
-            <th scope="col">Now</th>
-            <th scope="col">A month ago</th>
-            <th scope="col">A year ago</th>
-          </tr>
-        </thead>
-        <tbody>
-          {d.curve.map((c) => (
-            <tr key={c.maturity}>
-              <th scope="row">{c.maturity}</th>
-              <td>{c.now}%</td>
-              <td>{c.month_ago === null ? "–" : `${c.month_ago}%`}</td>
-              <td>{c.year_ago === null ? "–" : `${c.year_ago}%`}</td>
+      {/* A curve needs more than one maturity; India's data has only the 10-year. */}
+      {d.curve.length > 1 && (
+        <table className={styles.table}>
+          <caption>The yield curve: what the government pays to borrow for different lengths of time</caption>
+          <thead>
+            <tr>
+              <th scope="col" />
+              <th scope="col">Now</th>
+              <th scope="col">A month ago</th>
+              <th scope="col">A year ago</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {inverted && (
+          </thead>
+          <tbody>
+            {d.curve.map((c) => (
+              <tr key={c.maturity}>
+                <th scope="row">{c.maturity}</th>
+                <td>{c.now}%</td>
+                <td>{c.month_ago === null ? "–" : `${c.month_ago}%`}</td>
+                <td>{c.year_ago === null ? "–" : `${c.year_ago}%`}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {d.curve.length > 1 && inverted && (
         <p className={styles.close}>
           Short-term yields are above long-term ones (an &ldquo;inverted&rdquo; curve). In the past this has often come before a
           slowdown, though not always.
@@ -405,13 +408,13 @@ export default function BondCard({ data, onAsk, disabled = false }: { data: Bond
           disabled={disabled}
           label="Ask Tickerwise about this →"
           question={() =>
-            `Why are ${d.country === "uk" ? "UK gilt" : "US Treasury"} yields at ${d.now}% now, and what does it mean for mortgages, savings and bond funds?`
+            `Why are ${d.country === "uk" ? "UK gilt" : d.country === "in" ? "Indian G-sec" : "US Treasury"} yields at ${d.now}% now, and what does it mean for mortgages, savings and bond funds?`
           }
         />
       )}
 
       <p className={styles.note}>
-        Source: {d.source}. Events marked up to 2023. Past times are history, not a forecast: what followed depended on what
+        Source: {d.source}. {d.events.length > 0 ? "Events marked up to 2023. " : ""}Past times are history, not a forecast: what followed depended on what
         else was happening. {d.stock_index} changes are prices only, without dividends. Research, not advice.
       </p>
     </section>
