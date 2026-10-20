@@ -203,6 +203,12 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
               Accounts and tax: &ldquo;How much can I put in an ISA this year?&rdquo; or &ldquo;How is ELSS taxed?&rdquo;
             </li>
             <li>
+              Alternative investments: &ldquo;If I&apos;d put £10,000 in gold 20 years ago, what would I have now compared
+              with shares?&rdquo; Tickerwise replays gold, silver, commodities, property, infrastructure, private equity,
+              inflation-linked bonds and Bitcoin over up to 20 years. It explains trading products such as futures and
+              CFDs and their risks, but doesn&apos;t help with trading them.
+            </li>
+            <li>
               Bonds and interest rates: &ldquo;Why are gilt yields rising?&rdquo; or &ldquo;What would happen to my bond fund
               if yields rose another 1%?&rdquo;
             </li>
