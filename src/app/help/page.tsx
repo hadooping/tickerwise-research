@@ -201,7 +201,9 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
               10 years?&rdquo;
             </li>
             <li>
-              Accounts and tax: &ldquo;How much can I put in an ISA this year?&rdquo; or &ldquo;How is ELSS taxed?&rdquo;
+              Accounts and tax: &ldquo;How much can I put in an ISA this year?&rdquo;, &ldquo;How is ELSS taxed?&rdquo; or
+              &ldquo;How much capital gains tax would I pay on a £15,000 gain?&rdquo; Tickerwise works out capital gains tax
+              for the current tax year in the UK, the US (federal) and India, including losses and allowances.
             </li>
             <li>
               Alternative investments: &ldquo;If I&apos;d put £10,000 in gold 20 years ago, what would I have now compared
