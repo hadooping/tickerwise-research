@@ -208,6 +208,30 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
         ),
       },
       {
+        q: "What does a company rundown cover?",
+        a: (
+          <>
+            <p>
+              Ask how a company is doing and Tickerwise reads its accounts for the last four years (and the last four
+              quarters where it reports them), then explains them in plain words, in this order: what came in and what was
+              left as profit at each step, with any one-off gains or costs; the cash the business brought in, what it
+              spent on equipment, and where the rest went (dividends, buying back shares, paying down debt or buying other
+              companies); what it owns and owes, including whether profit comfortably covers the interest on its debts;
+              what analysts expect for sales and profit this year and next, and whether those forecasts have been rising
+              or falling; how its latest results compared with what was expected; and which parts of the business make the
+              money. For a narrower question it answers just that part.
+            </p>
+            <p>
+              Banks and insurers are judged differently, because most of their money belongs to customers. For a bank,
+              Tickerwise covers the interest it earns on loans against what it pays savers, what costs and bad loans take
+              from its income, its profit against everything it owns, and its capital and cash cushions from its latest
+              results. For an insurer, it covers claims against income, profit, and its solvency ratio (its capital against
+              what regulators require).
+            </p>
+          </>
+        ),
+      },
+      {
         q: "How does the valuation card work?",
         a: (
           <>
@@ -228,7 +252,8 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
               margin of safety (paying well below that value, to allow for mistakes) would point to, its earnings yield (a
               year&apos;s profit as a % of the price) against the bond yield, and a quality checklist covering debt, whether
               the company can pay the bills due within a year (and, if it spends more cash than it brings in, how long
-              its cash would last), return on equity, cash and dividends. <strong>Price in context</strong> shows what buyers pay for each 1 of
+              its cash would last), return on equity, cash and dividends. Banks and insurers get return on assets and net
+              assets per share instead of the debt and bills checks, which don&apos;t fit them. <strong>Price in context</strong> shows what buyers pay for each 1 of
               profit (the P/E) beside the company&apos;s own usual level, its competitors and its home stock market as a
               whole (the FTSE 100, Nifty 50 or S&amp;P 500), then how it has moved over recent years. Where profit is a
               poor guide it uses the yardstick that suits the industry: net assets for insurers, property companies and
