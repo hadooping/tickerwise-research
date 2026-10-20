@@ -226,8 +226,9 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
               link to the source. These are their opinions, not Tickerwise&apos;s.{" "}
               <strong>Value investing</strong> shows an estimated value from the company&apos;s own record, the price a
               margin of safety (paying well below that value, to allow for mistakes) would point to, its earnings yield (a
-              year&apos;s profit as a % of the price) against the bond yield, and a quality checklist covering debt, return
-              on equity, cash and dividends. <strong>Price in context</strong> shows what buyers pay for each 1 of
+              year&apos;s profit as a % of the price) against the bond yield, and a quality checklist covering debt, whether
+              the company can pay the bills due within a year (and, if it spends more cash than it brings in, how long
+              its cash would last), return on equity, cash and dividends. <strong>Price in context</strong> shows what buyers pay for each 1 of
               profit (the P/E) beside the company&apos;s own usual level, its competitors and its home stock market as a
               whole (the FTSE 100, Nifty 50 or S&amp;P 500), then how it has moved over recent years. Where profit is a
               poor guide it uses the yardstick that suits the industry: net assets for insurers, property companies and
