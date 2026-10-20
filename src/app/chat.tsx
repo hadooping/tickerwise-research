@@ -2160,6 +2160,11 @@ export default function Chat() {
                   <button
                     className={`${styles.suggestion} ${styles.suggestionPortfolio}`}
                     onClick={() => {
+                      // Portfolio reviews are for signed-in people; visitors get My portfolio's sign-in screen.
+                      if (!account) {
+                        openPortfolio();
+                        return;
+                      }
                       setInput(PORTFOLIO_TEMPLATE);
                       inputRef.current?.focus();
                     }}
