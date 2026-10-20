@@ -25,8 +25,20 @@ export async function proxy(request: NextRequest) {
     headers.set("x-tickerwise-client-ip", ip);
     headers.set("x-tickerwise-client-sig", await sign(ip));
   }
+  // "Frequently searched" depends only on the visitor's region, so the region goes into the address
+  // (/api/trending?region=uk). Vercel's CDN can then keep one copy per region and serve it in about 0.2s,
+  // instead of every visit waiting seconds for the backend to rebuild it.
+  if (request.nextUrl.pathname === "/api/trending" && !request.nextUrl.searchParams.has("region")) {
+    const url = request.nextUrl.clone();
+    url.searchParams.set("region", REGIONS[(request.headers.get("x-vercel-ip-country") ?? "").toUpperCase()] ?? "other");
+    return NextResponse.rewrite(url, { request: { headers } });
+  }
   return NextResponse.next({ request: { headers } });
 }
+
+// The countries with their own "Frequently searched" list, as the backend's trending.REGIONS (GB is the
+// United Kingdom's code); every other country is "other".
+const REGIONS: Record<string, string> = { GB: "uk", US: "us", IN: "in" };
 
 export const config = {
   matcher: "/api/:path*",
