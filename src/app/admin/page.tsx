@@ -148,7 +148,7 @@ function Dashboard({ s }: { s: Summary }) {
           <div className={styles.tiles} style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
             <Tile label="Cost today" text={usd(c.today)} hint={`${c.per_day[s.days[s.days.length - 1]]?.answers ?? 0} answers`} />
             <Tile label="Cost, last 14 days" text={usd(c.total)} hint={`${c.answers} answers${c.recorded_since ? `, recorded since ${day(c.recorded_since)}` : ""}`} />
-            <Tile label="Average per answer" text={usd(c.per_answer)} hint={`${usd(c.per_answer === null ? null : c.per_answer * 10)} for a full day of 10 questions`} />
+            <Tile label="Average per answer" text={usd(c.per_answer)} hint={`${usd(c.per_answer === null ? null : c.per_answer * 5)} for a full day of 5 questions`} />
           </div>
           <p className={styles.hint}>
             Last 14 days: answers {usd(c.split.answer)}, web searches {usd(c.split.searches)}, follow-up suggestions{" "}
