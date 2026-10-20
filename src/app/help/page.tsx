@@ -76,7 +76,7 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
         a: (
           <p>
             Yes. There are no fees, subscriptions or ads. To keep running costs manageable, you can ask 3 questions a day
-            without an account and 10 a day when signed in. The count resets at midnight UK time. The planners on the home
+            without an account and 5 a day when signed in. The count resets at midnight UK time. The planners on the home
             page don&apos;t count towards the limit.
           </p>
         ),
@@ -313,7 +313,7 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
         q: "Do I need an account?",
         a: (
           <p>
-            No. Without one, your threads are saved only in your browser. Signing in with Google gives you 10 questions a
+            No. Without one, your threads are saved only in your browser. Signing in with Google gives you 5 questions a
             day instead of 3. It also syncs your threads across devices and unlocks Settings (your profile, answer length
             and language, memory), your portfolio, your watchlist, and reminders and alerts.
           </p>
