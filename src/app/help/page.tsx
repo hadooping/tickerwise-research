@@ -149,11 +149,17 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
               minutes.
             </li>
             <li>
+              <strong>US companies&apos; yearly accounts</strong> come from their annual reports as filed with the SEC (the US
+              markets regulator), through its EDGAR service, with Yahoo Finance filling in the few lines the filings
+              don&apos;t hold. Analysts&apos; forecasts, recent quarters and other countries&apos; companies come from Yahoo Finance.
+            </li>
+            <li>
               <strong>Indian mutual fund prices (NAVs)</strong> come from AMFI and mfapi.in.
             </li>
             <li>
               <strong>UK gilt yields</strong> come from the Bank of England, about two working days behind; US Treasury
-              yields come from Yahoo Finance.
+              yields come from the Federal Reserve through FRED, the St. Louis Fed&apos;s data service, about one working
+              day behind.
             </li>
             <li>
               <strong>Rules and allowances</strong> come from about 100 official pages, such as GOV.UK, FSCS, India&apos;s
