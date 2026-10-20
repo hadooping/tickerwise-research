@@ -1957,13 +1957,16 @@ export default function Chat() {
           <BellIcon /> Notifications
           {unread > 0 && <span className={`${styles.badge} ${styles.badgeAlert}`}>{unread}</span>}
         </button>
-        <button
-          className={styles.settingsBtn}
-          onClick={() => openPortfolio()}
-        >
-          <BriefcaseIcon /> My portfolio
-          {holdings.length > 0 && <span className={styles.badge}>{holdings.length}</span>}
-        </button>
+        {/* My portfolio is for signed-in people only, so visitors don't see it. */}
+        {account && (
+          <button
+            className={styles.settingsBtn}
+            onClick={() => openPortfolio()}
+          >
+            <BriefcaseIcon /> My portfolio
+            {holdings.length > 0 && <span className={styles.badge}>{holdings.length}</span>}
+          </button>
+        )}
         <button
           className={styles.settingsBtn}
           onClick={() => {
@@ -2126,7 +2129,7 @@ export default function Chat() {
                 onChange={setInput}
                 onSubmit={() => ask()}
                 onStop={isLoading ? stop : undefined}
-                onAttach={attachFile}
+                onAttach={account ? attachFile : undefined}
                 disabled={isLoading || outOfQuestions}
                 placeholder="Ask about stocks, funds, bonds, mortgages, retirement or tax"
                 large
@@ -2156,17 +2159,20 @@ export default function Chat() {
                     </button>
                   </li>
                 ))}
-                <li>
-                  <button
-                    className={`${styles.suggestion} ${styles.suggestionPortfolio}`}
-                    onClick={() => {
-                      setInput(PORTFOLIO_TEMPLATE);
-                      inputRef.current?.focus();
-                    }}
-                  >
-                    Review my portfolio: paste your holdings
-                  </button>
-                </li>
+                {/* Portfolio reviews are for signed-in people only, so visitors don't see this suggestion. */}
+                {account && (
+                  <li>
+                    <button
+                      className={`${styles.suggestion} ${styles.suggestionPortfolio}`}
+                      onClick={() => {
+                        setInput(PORTFOLIO_TEMPLATE);
+                        inputRef.current?.focus();
+                      }}
+                    >
+                      Review my portfolio: paste your holdings
+                    </button>
+                  </li>
+                )}
               </ul>
               <div className={styles.topics}>
                 <span className={styles.topicsLabel}>Browse by topic</span>
@@ -2320,7 +2326,7 @@ export default function Chat() {
               onChange={setInput}
               onSubmit={() => ask()}
               onStop={isLoading ? stop : undefined}
-              onAttach={attachFile}
+              onAttach={account ? attachFile : undefined}
               disabled={isLoading || outOfQuestions}
               placeholder="Ask a follow-up"
               inputRef={inputRef}

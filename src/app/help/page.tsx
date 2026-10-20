@@ -326,7 +326,8 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
             Yes, once you&apos;re signed in. Open My portfolio and add holdings by hand, import a CSV from your broker
             (Trading 212 and others), or upload an Indian CAS statement. Tickerwise can then review your concentration,
             sector and currency exposure, and what regular-plan mutual funds have cost you. You can stop it using your
-            portfolio in answers at any time.
+            portfolio in answers at any time. Reviews of your own holdings, including ones pasted into a question, are
+            for signed-in users; questions about portfolios in general are open to everyone.
           </p>
         ),
       },
