@@ -159,7 +159,8 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
             <li>
               <strong>UK gilt yields</strong> come from the Bank of England, about two working days behind; US Treasury
               yields come from the Federal Reserve through FRED, the St. Louis Fed&apos;s data service, about one working
-              day behind.
+              day behind; Indian 10-year yields are the OECD&apos;s monthly averages, also through FRED, about one to two
+              months behind.
             </li>
             <li>
               <strong>Rules and allowances</strong> come from about 100 official pages, such as GOV.UK, FSCS, India&apos;s
@@ -200,7 +201,9 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
               10 years?&rdquo;
             </li>
             <li>
-              Accounts and tax: &ldquo;How much can I put in an ISA this year?&rdquo; or &ldquo;How is ELSS taxed?&rdquo;
+              Accounts and tax: &ldquo;How much can I put in an ISA this year?&rdquo;, &ldquo;How is ELSS taxed?&rdquo; or
+              &ldquo;How much capital gains tax would I pay on a £15,000 gain?&rdquo; Tickerwise works out capital gains tax
+              for the current tax year in the UK, the US (federal) and India, including losses and allowances.
             </li>
             <li>
               Alternative investments: &ldquo;If I&apos;d put £10,000 in gold 20 years ago, what would I have now compared

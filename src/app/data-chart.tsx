@@ -18,6 +18,14 @@ export interface FigureData {
 const LOCALES: Record<string, string> = { GBP: "en-GB", USD: "en-US", INR: "en-IN" };
 
 function format(v: number, unit: FigureData["unit"], compact = false) {
+  // Large rupee amounts are written in lakh crore and crore (1 crore is 10 million, 1 lakh crore is a million
+  // million), as Indian readers say them: "₹3.09 lakh cr" and "₹30,630 cr", not the browser's compact "₹3.1LCr".
+  if (unit === "INR" && Math.abs(v) >= 1e12)
+    return `₹${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 2 }).format(v / 1e12)} lakh cr`;
+  if (unit === "INR" && Math.abs(v) >= 1e7)
+    return `₹${new Intl.NumberFormat("en-IN", { maximumFractionDigits: Math.abs(v) < 1e9 ? 1 : 0 }).format(v / 1e7)} cr`;
+  // Millions and more are always shortened (£8.3bn, not £8,338,000,000), as company figures run to billions.
+  compact = compact || Math.abs(v) >= 1e6;
   if (unit === "GBP" || unit === "USD" || unit === "INR")
     return new Intl.NumberFormat(LOCALES[unit], {
       style: "currency",
