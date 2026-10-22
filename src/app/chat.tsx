@@ -212,12 +212,21 @@ const PORTFOLIO_TEMPLATE = `Review my portfolio (base currency GBP):
 const CITE_MARKER = /\[\d+\]\(<[^>]*>\)/g;
 
 // The line an answer holds where its chart belongs, in an answer about how a company is doing: the chart goes
-// after "How it makes money" rather than above the whole answer. It's an HTML comment, so it never shows as text.
-const CHART_MARK = "<!--chart-->";
+// after "How it makes money" rather than above the whole answer. Spaces inside it are allowed ("<!-- chart -->").
+// The text renderer shows HTML comments as text, so the mark is always taken out before the answer is shown.
+const CHART_MARK = /<!--\s*chart\s*-->/i;
+
+// The answer without any chart mark: whole marks anywhere, and the start of one at the very end, which is a mark
+// still arriving while the answer streams in ("<!--ch"), so it never flashes up as text.
+function withoutMark(text: string) {
+  return text.replace(new RegExp(CHART_MARK.source, "gi"), "").replace(/<!?-?-?[\sa-z]*$/i, (tail) =>
+    "<!--chart".startsWith(tail.replace(/\s/g, "").toLowerCase()) ? "" : tail
+  );
+}
 
 // The answer as copied text: without citation markers or the chart's mark.
 function plainAnswer(answer: string) {
-  return answer.replace(CITE_MARKER, "").replace(CHART_MARK, "").trim();
+  return withoutMark(answer.replace(CITE_MARKER, "")).trim();
 }
 
 function domainOf(url: string) {
@@ -1036,7 +1045,8 @@ export function TurnContent({
   // With a chart and the mark in the answer, the answer is split at the mark and the chart drawn between the two
   // parts; otherwise charts go above the answer as before. While the answer streams in, the mark may not have
   // arrived yet, so the chart stays above until it does.
-  const at = turn.answer?.indexOf(CHART_MARK) ?? -1;
+  const mark = turn.answer?.match(CHART_MARK);
+  const at = mark?.index ?? -1;
   const inline = at >= 0 && Boolean(turn.figures?.length);
   return (
     <>
@@ -1084,10 +1094,11 @@ export function TurnContent({
         <>
           <Prose text={turn.answer.slice(0, at)} />
           {turn.figures?.map((f, i) => <DataChart key={i} fig={f} />)}
-          <Prose text={turn.answer.slice(at + CHART_MARK.length)} />
+          <Prose text={withoutMark(turn.answer.slice(at + (mark?.[0].length ?? 0)))} />
         </>
       ) : turn.answer ? (
-        <Prose text={turn.answer} />
+        // No chart to put at the mark (none was drawn, or it hasn't arrived): the mark is just taken out.
+        <Prose text={withoutMark(turn.answer)} />
       ) : (
         !turn.error &&
         !turn.done && (
