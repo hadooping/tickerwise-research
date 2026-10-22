@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Atkinson_Hyperlegible, Geist, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
+import UpdateBanner from "./update-banner";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -47,6 +48,8 @@ export default function RootLayout({
       </head>
       <body>
         {children}
+        {/* Offers a reload when a new version goes live while the page is open. */}
+        <UpdateBanner />
         {/* Anonymous visit counts (country, page, device) for the Vercel dashboard; no cookies. */}
         <Analytics />
       </body>

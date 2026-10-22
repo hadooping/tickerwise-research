@@ -2125,10 +2125,9 @@ a.settingsBtn {
 }
 
 /* A bar is 62% of its column's width, centred. Other periods are grey. */
-.resultsBar,
-.resultsKeySwatch {
+.resultsBar {
   background: var(--text-faint);
-  opacity: 0.45;
+  opacity: 0.3;
 }
 
 .resultsBar {
@@ -2139,13 +2138,13 @@ a.settingsBtn {
 }
 
 .resultsBarNow {
-  background: var(--series-1);
+  background: var(--bar, var(--series-1));
   opacity: 1;
 }
 
 .resultsBarCompared {
-  background: var(--series-1);
-  opacity: 0.45;
+  background: var(--bar, var(--series-1));
+  opacity: 0.5;
 }
 
 .resultsValue {
@@ -2165,30 +2164,22 @@ a.settingsBtn {
   color: var(--text-faint);
 }
 
-.resultsLabels span {
+.resultsLabels > span {
   flex: 1;
   min-width: 0;
   text-align: center;
 }
 
-.resultsKey {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin: 14px 0 0;
-  padding: 0;
-  list-style: none;
-  font-size: 12.5px;
+/* The dates under the bars being compared, darker than the rest, with the bar's name below them. */
+.resultsLabelNamed {
   color: var(--text-muted);
 }
 
-.resultsKeySwatch {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin-right: 4px;
-  border-radius: 2px;
-  vertical-align: -1px;
+.resultsBarName {
+  display: block;
+  margin-top: 2px;
+  color: var(--text);
+  font-weight: 600;
 }
 
 @media (max-width: 520px) {
@@ -2414,4 +2405,50 @@ a.settingsBtn {
 
 .prose :global(.rating-flat) {
   color: var(--text-muted);
+}
+
+/* The "new version available" banner (update-banner.tsx): a small bar fixed near the bottom of the screen,
+   above the phone's home indicator, centred and never wider than the screen less a 16px gutter each side. */
+.updateBanner {
+  position: fixed;
+  left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(100vw - 32px);
+  padding: 10px 10px 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 0.18);
+}
+
+.updateReload {
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.updateReload:hover {
+  background: var(--accent-hover);
+}
+
+.updateClose {
+  padding: 2px 6px;
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
 }
