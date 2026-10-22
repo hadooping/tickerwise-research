@@ -13,8 +13,9 @@ export interface FigureData {
   labels: string[];
   series: { name: string; values: (number | null)[] }[];
   note: string;
-  // Results by quarter or by year: the newest is compared with the same quarter a year earlier and with the
-  // period before, in a small table under the chart, as a few percent barely shows in bars that start at zero.
+  // Results by quarter or by year: drawn by Results (below) as each measure's newest figure, its change on the
+  // same quarter a year earlier and on the period before, and its own bar chart, as a few percent barely shows
+  // in bars that start at zero, and measures of different sizes (sales and profit) squash each other on one scale.
   changes?: "quarter" | "year" | null;
 }
 
@@ -34,7 +35,24 @@ function comparisons(fig: FigureData): [number, string][] {
   return out.filter(([i]) => i >= 0);
 }
 
-/** The newest period against earlier ones, as percentage changes for each series. */
+// The newest value's percentage change on an earlier one, or null when there's none to give: a figure is missing,
+// or the earlier one is zero or a loss, from which a percentage means nothing.
+function change(now: number | null | undefined, then: number | null | undefined) {
+  if (now === null || now === undefined || then === null || then === undefined || then <= 0) return null;
+  return ((now - then) / then) * 100;
+}
+
+// A change as ▲ or ▼ and the percentage, green for up and red for down.
+function Change({ pct }: { pct: number }) {
+  return (
+    <span className={pct > 0 ? styles.up : pct < 0 ? styles.down : undefined}>
+      {pct > 0 ? "▲" : pct < 0 ? "▼" : ""} {Math.abs(pct).toFixed(1)}%
+    </span>
+  );
+}
+
+/** The newest period against earlier ones, as percentage changes for each series: shown under the table view of a
+ *  results chart, where Results' figures aren't. */
 function Changes({ fig }: { fig: FigureData }) {
   const against = comparisons(fig);
   if (!against.length) return null;
@@ -61,16 +79,8 @@ function Changes({ fig }: { fig: FigureData }) {
                 <th scope="row">{s.name}</th>
                 <td>{now === null || now === undefined ? "–" : format(now, fig.unit)}</td>
                 {against.map(([i]) => {
-                  const then = s.values[i];
-                  // A change from zero or from a loss has no meaningful percentage, so it's shown as a dash.
-                  if (now === null || now === undefined || then === null || then === undefined || then <= 0)
-                    return <td key={i}>–</td>;
-                  const pct = ((now - then) / then) * 100;
-                  return (
-                    <td key={i} className={pct > 0 ? styles.up : pct < 0 ? styles.down : undefined}>
-                      {pct > 0 ? "▲" : pct < 0 ? "▼" : ""} {Math.abs(pct).toFixed(1)}%
-                    </td>
-                  );
+                  const pct = change(now, s.values[i]);
+                  return <td key={i}>{pct === null ? "–" : <Change pct={pct} />}</td>;
                 })}
               </tr>
             );
@@ -86,10 +96,12 @@ const LOCALES: Record<string, string> = { GBP: "en-GB", USD: "en-US", INR: "en-I
 function format(v: number, unit: FigureData["unit"], compact = false) {
   // Large rupee amounts are written in lakh crore and crore (1 crore is 10 million, 1 lakh crore is a million
   // million), as Indian readers say them: "₹3.09 lakh cr" and "₹30,630 cr", not the browser's compact "₹3.1LCr".
+  // A loss's minus sign goes before the ₹ ("-₹4,000 cr"), as the browser writes other currencies.
+  const sign = v < 0 ? "-" : "";
   if (unit === "INR" && Math.abs(v) >= 1e12)
-    return `₹${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 2 }).format(v / 1e12)} lakh cr`;
+    return `${sign}₹${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 2 }).format(Math.abs(v) / 1e12)} lakh cr`;
   if (unit === "INR" && Math.abs(v) >= 1e7)
-    return `₹${new Intl.NumberFormat("en-IN", { maximumFractionDigits: Math.abs(v) < 1e9 ? 1 : 0 }).format(v / 1e7)} cr`;
+    return `${sign}₹${new Intl.NumberFormat("en-IN", { maximumFractionDigits: Math.abs(v) < 1e9 ? 1 : 0 }).format(Math.abs(v) / 1e7)} cr`;
   // Millions and more are always shortened (£8.3bn, not £8,338,000,000), as company figures run to billions.
   compact = compact || Math.abs(v) >= 1e6;
   if (unit === "GBP" || unit === "USD" || unit === "INR")
@@ -140,16 +152,10 @@ function Bars({ fig }: { fig: FigureData }) {
   const span = t[t.length - 1] - lo || 1;
   const pos = (v: number) => ((v - lo) / span) * 100;
   const zero = pos(0);
-  // In a results chart, the periods compared in the table stay bright and the others are faded, so the eye goes
-  // to the newest quarter and the same quarter a year earlier.
-  const compared = new Set([fig.labels.length - 1, ...comparisons(fig).map(([i]) => i)]);
   return (
     <div className={styles.bars}>
       {fig.labels.map((label, i) => (
-        <div
-          key={label + i}
-          className={`${styles.barGroup} ${fig.changes && !compared.has(i) ? styles.barGroupFaded : ""}`}
-        >
+        <div key={label + i} className={styles.barGroup}>
           <div className={styles.barLabel}>{label}</div>
           <div className={styles.barTrack}>
             {fig.series.map((s, k) => {
@@ -170,6 +176,101 @@ function Bars({ fig }: { fig: FigureData }) {
         </div>
       ))}
     </div>
+  );
+}
+
+/** A results chart: for each measure (sales, profit before tax), the newest figure, its changes on the periods
+ *  comparisons() picks, and its own upright bars, one per period, oldest on the left. Each measure has its own
+ *  scale, so profit's swings show next to sales several times its size. The newest bar is solid, the bars it's
+ *  compared with are pale, and the rest are grey, in one colour for every measure, as each is named above its bars. The measures sit side by side, or one above the other on a phone. */
+function Results({ fig }: { fig: FigureData }) {
+  const last = fig.labels.length - 1;
+  const against = comparisons(fig);
+  const compared = new Set(against.map(([i]) => i));
+  return (
+    <>
+      <div className={styles.results}>
+        {fig.series.map((s) => {
+          const now = s.values[last];
+          const values = s.values.filter((v): v is number => v !== null && v !== undefined);
+          // The scale runs from the lowest value to the highest, always including zero, so a loss draws below
+          // the zero line. pos is a value's height as a percentage of the plot, from the bottom.
+          const lo = Math.min(0, ...values);
+          const hi = Math.max(0, ...values);
+          const pos = (v: number) => ((v - lo) / (hi - lo || 1)) * 100;
+          const zero = pos(0);
+          return (
+            <div key={s.name} className={styles.resultsMeasure}>
+              <div className={styles.resultsName}>
+                {s.name}, {fig.labels[last]}
+              </div>
+              <div className={styles.resultsFigure}>{now === null || now === undefined ? "–" : format(now, fig.unit)}</div>
+              <div className={styles.resultsChips}>
+                {against.map(([i]) => {
+                  const pct = change(now, s.values[i]);
+                  return pct === null ? null : (
+                    <span key={i} className={styles.resultsChip}>
+                      <Change pct={pct} /> on {fig.labels[i]}
+                    </span>
+                  );
+                })}
+              </div>
+              {/* Room is left below the zero line only when there's a loss to draw there. */}
+              <div className={`${styles.resultsPlot} ${lo < 0 ? styles.resultsPlotNegative : ""}`}>
+                <div className={styles.resultsArea}>
+                  <span className={styles.resultsZero} style={{ bottom: `${zero}%` }} />
+                  {s.values.map((v, i) => {
+                    if (v === null || v === undefined) return null;
+                    const role = i === last ? styles.resultsBarNow : compared.has(i) ? styles.resultsBarCompared : "";
+                    // Each period's column is an equal share of the width; the bar sits in its middle.
+                    const column = { left: `${(i / fig.labels.length) * 100}%`, width: `${100 / fig.labels.length}%` };
+                    return (
+                      <div key={i} className={styles.resultsColumn} style={column} title={`${fig.labels[i]}: ${format(v, fig.unit)}`}>
+                        <span
+                          className={`${styles.resultsBar} ${role}`}
+                          style={{ bottom: `${Math.min(zero, pos(v))}%`, height: `max(${Math.abs(pos(v) - zero)}%, 2px)` }}
+                        />
+                        {/* The value above a bar, or below it for a loss. */}
+                        <span
+                          className={styles.resultsValue}
+                          style={v < 0 ? { top: `calc(${100 - pos(v)}% + 3px)` } : { bottom: `calc(${pos(v)}% + 3px)` }}
+                        >
+                          {format(v, fig.unit, true)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              <div className={styles.resultsLabels}>
+                {/* Each label on two lines, the year below ("Jul–Sep" over "2026"), so five fit side by side on a
+                    phone. lastIndexOf(" ") finds the space before the year. */}
+                {fig.labels.map((label, i) => (
+                  <span key={label + i}>
+                    {label.slice(0, label.lastIndexOf(" "))}
+                    <br />
+                    {label.slice(label.lastIndexOf(" ") + 1)}
+                  </span>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <ul className={styles.resultsKey}>
+        <li>
+          <span className={`${styles.resultsKeySwatch} ${styles.resultsBarNow}`} /> Latest
+        </li>
+        {against.length > 0 && (
+          <li>
+            <span className={`${styles.resultsKeySwatch} ${styles.resultsBarCompared}`} /> Compared with it
+          </li>
+        )}
+        <li>
+          <span className={styles.resultsKeySwatch} /> Other {fig.changes === "year" ? "years" : "quarters"}
+        </li>
+      </ul>
+    </>
   );
 }
 
@@ -307,6 +408,8 @@ export default function DataChart({
   expandable?: boolean; // false inside a panel that has its own ⤢ button
 }) {
   const [asTable, setAsTable] = useState(false);
+  // A company's results, which Results draws (the backend marks them with changes).
+  const results = fig.kind === "bar" && !!fig.changes;
   return (
     <figure className={`${styles.chart} ${styles.figure} ${bare ? styles.figureBare : ""}`}>
       <figcaption className={styles.figureHead}>
@@ -345,11 +448,11 @@ export default function DataChart({
         </div>
       ) : (
         <>
-          <Legend series={fig.series} />
-          {fig.kind === "bar" ? <Bars fig={fig} /> : <Lines fig={fig} large={large} />}
+          {!results && <Legend series={fig.series} />}
+          {results ? <Results fig={fig} /> : fig.kind === "bar" ? <Bars fig={fig} /> : <Lines fig={fig} large={large} />}
         </>
       )}
-      <Changes fig={fig} />
+      {asTable && <Changes fig={fig} />}
       <p className={styles.chartNote}>{fig.note}</p>
     </figure>
   );
