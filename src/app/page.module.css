@@ -2045,6 +2045,20 @@ a.settingsBtn {
   color: var(--text-muted);
 }
 
+/* The change table under a results chart: a gap above it, and headings allowed to wrap on narrow screens. */
+.changeTable {
+  margin-top: 12px;
+}
+
+.changeTable thead th {
+  white-space: normal;
+}
+
+/* Periods in a results chart that the change table doesn't compare. */
+.barGroupFaded {
+  opacity: 0.5;
+}
+
 @media (max-width: 520px) {
   .barGroup {
     grid-template-columns: minmax(0, 1fr);
