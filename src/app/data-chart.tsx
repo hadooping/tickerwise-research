@@ -13,6 +13,72 @@ export interface FigureData {
   labels: string[];
   series: { name: string; values: (number | null)[] }[];
   note: string;
+  // Results by quarter or by year: the newest is compared with the same quarter a year earlier and with the
+  // period before, in a small table under the chart, as a few percent barely shows in bars that start at zero.
+  changes?: "quarter" | "year" | null;
+}
+
+// The periods the newest one is compared with, as [label index, heading]: for quarters, the same quarter a year
+// earlier (four back) and the quarter before; for years, the year before. Missing ones are skipped.
+function comparisons(fig: FigureData): [number, string][] {
+  const last = fig.labels.length - 1;
+  const out: [number, string][] =
+    fig.changes === "quarter"
+      ? [
+          [last - 4, "On a year earlier"],
+          [last - 1, "On the quarter before"],
+        ]
+      : fig.changes === "year"
+        ? [[last - 1, "On the year before"]]
+        : [];
+  return out.filter(([i]) => i >= 0);
+}
+
+/** The newest period against earlier ones, as percentage changes for each series. */
+function Changes({ fig }: { fig: FigureData }) {
+  const against = comparisons(fig);
+  if (!against.length) return null;
+  const last = fig.labels.length - 1;
+  return (
+    <div className={styles.figureTableWrap}>
+      <table className={`${styles.figureTable} ${styles.changeTable}`}>
+        <thead>
+          <tr>
+            <th scope="col" />
+            <th scope="col">{fig.labels[last]}</th>
+            {against.map(([i, heading]) => (
+              <th key={i} scope="col">
+                {heading} ({fig.labels[i]})
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {fig.series.map((s) => {
+            const now = s.values[last];
+            return (
+              <tr key={s.name}>
+                <th scope="row">{s.name}</th>
+                <td>{now === null || now === undefined ? "–" : format(now, fig.unit)}</td>
+                {against.map(([i]) => {
+                  const then = s.values[i];
+                  // A change from zero or from a loss has no meaningful percentage, so it's shown as a dash.
+                  if (now === null || now === undefined || then === null || then === undefined || then <= 0)
+                    return <td key={i}>–</td>;
+                  const pct = ((now - then) / then) * 100;
+                  return (
+                    <td key={i} className={pct > 0 ? styles.up : pct < 0 ? styles.down : undefined}>
+                      {pct > 0 ? "▲" : pct < 0 ? "▼" : ""} {Math.abs(pct).toFixed(1)}%
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 const LOCALES: Record<string, string> = { GBP: "en-GB", USD: "en-US", INR: "en-IN" };
@@ -74,10 +140,16 @@ function Bars({ fig }: { fig: FigureData }) {
   const span = t[t.length - 1] - lo || 1;
   const pos = (v: number) => ((v - lo) / span) * 100;
   const zero = pos(0);
+  // In a results chart, the periods compared in the table stay bright and the others are faded, so the eye goes
+  // to the newest quarter and the same quarter a year earlier.
+  const compared = new Set([fig.labels.length - 1, ...comparisons(fig).map(([i]) => i)]);
   return (
     <div className={styles.bars}>
       {fig.labels.map((label, i) => (
-        <div key={label + i} className={styles.barGroup}>
+        <div
+          key={label + i}
+          className={`${styles.barGroup} ${fig.changes && !compared.has(i) ? styles.barGroupFaded : ""}`}
+        >
           <div className={styles.barLabel}>{label}</div>
           <div className={styles.barTrack}>
             {fig.series.map((s, k) => {
@@ -277,6 +349,7 @@ export default function DataChart({
           {fig.kind === "bar" ? <Bars fig={fig} /> : <Lines fig={fig} large={large} />}
         </>
       )}
+      <Changes fig={fig} />
       <p className={styles.chartNote}>{fig.note}</p>
     </figure>
   );
