@@ -2054,9 +2054,141 @@ a.settingsBtn {
   white-space: normal;
 }
 
-/* Periods in a results chart that the change table doesn't compare. */
-.barGroupFaded {
-  opacity: 0.5;
+/* A results chart (Results in data-chart.tsx): one block per measure, side by side, one above the other when
+   there isn't room for two of 300px (so five bar values such as "₹2.7 lakh cr" fit side by side without touching). */
+.results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px 28px;
+}
+
+.resultsMeasure {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.resultsName {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.resultsFigure {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.resultsChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.resultsChip {
+  font-size: 12.5px;
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The bars' box: room above the tallest bar for its value, and below the zero line for a loss's value. */
+.resultsPlot {
+  height: 150px;
+  padding-top: 20px;
+  margin-top: 6px;
+}
+
+.resultsPlotNegative {
+  padding-bottom: 20px;
+}
+
+.resultsArea {
+  position: relative;
+  height: 100%;
+}
+
+.resultsZero {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--border);
+}
+
+.resultsColumn {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+/* A bar is 62% of its column's width, centred. Other periods are grey. */
+.resultsBar,
+.resultsKeySwatch {
+  background: var(--text-faint);
+  opacity: 0.45;
+}
+
+.resultsBar {
+  position: absolute;
+  left: 19%;
+  width: 62%;
+  border-radius: 3px;
+}
+
+.resultsBarNow {
+  background: var(--series-1);
+  opacity: 1;
+}
+
+.resultsBarCompared {
+  background: var(--series-1);
+  opacity: 0.45;
+}
+
+.resultsValue {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.resultsLabels {
+  display: flex;
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--text-faint);
+}
+
+.resultsLabels span {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+.resultsKey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.resultsKeySwatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 4px;
+  border-radius: 2px;
+  vertical-align: -1px;
 }
 
 @media (max-width: 520px) {
