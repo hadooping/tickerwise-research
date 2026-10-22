@@ -211,8 +211,13 @@ const PORTFOLIO_TEMPLATE = `Review my portfolio (base currency GBP):
 // Citation markers are written into the answer as [n](<url>) links.
 const CITE_MARKER = /\[\d+\]\(<[^>]*>\)/g;
 
+// The line an answer holds where its chart belongs, in an answer about how a company is doing: the chart goes
+// after "How it makes money" rather than above the whole answer. It's an HTML comment, so it never shows as text.
+const CHART_MARK = "<!--chart-->";
+
+// The answer as copied text: without citation markers or the chart's mark.
 function plainAnswer(answer: string) {
-  return answer.replace(CITE_MARKER, "").trim();
+  return answer.replace(CITE_MARKER, "").replace(CHART_MARK, "").trim();
 }
 
 function domainOf(url: string) {
@@ -998,6 +1003,21 @@ const dividendsOf = (turn: Turn) => (turn.valuations ?? []).flatMap((v) => (v.di
 // A turn gets the right-hand column on wide screens when it has competitors or dividends to show there.
 const hasRail = (turn: Turn) => Boolean(turn.peers?.length) || dividendsOf(turn).length > 0;
 
+/** Answer text as formatted text: bold, tables, links, the glossary's explanations, ratings and price moves. */
+function Prose({ text }: { text: string }) {
+  return (
+    <div className={styles.prose}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeGlossary, rehypeRatingChanges, rehypeMoves]}
+        components={markdownComponents}
+      >
+        {text}
+      </ReactMarkdown>
+    </div>
+  );
+}
+
 /** One question and its answer, with its sources, charts and cards: in the chat, and read-only on a
  *  shared thread's page (no onAsk, so the cards' "Ask Tickerwise" buttons are hidden). */
 export function TurnContent({
@@ -1013,6 +1033,11 @@ export function TurnContent({
   watched?: Set<string>;
   onWatch?: (company: { symbol: string; name: string }, on: boolean) => void;
 }) {
+  // With a chart and the mark in the answer, the answer is split at the mark and the chart drawn between the two
+  // parts; otherwise charts go above the answer as before. While the answer streams in, the mark may not have
+  // arrived yet, so the chart stays above until it does.
+  const at = turn.answer?.indexOf(CHART_MARK) ?? -1;
+  const inline = at >= 0 && Boolean(turn.figures?.length);
   return (
     <>
       <h2 className={styles.question}>{turn.question}</h2>
@@ -1020,7 +1045,7 @@ export function TurnContent({
       <Steps turn={turn} />
       <Sources sources={turn.sources} />
       {turn.charts?.map((c, i) => <GrowthChart key={i} chart={c} />)}
-      {turn.figures?.map((f, i) => <DataChart key={i} fig={f} />)}
+      {!inline && turn.figures?.map((f, i) => <DataChart key={i} fig={f} />)}
       {turn.plans?.map((pl, i) => (
         <RetirementCard key={i} initial={pl} onAsk={onAsk} disabled={disabled} />
       ))}
@@ -1055,16 +1080,14 @@ export function TurnContent({
         <span>Answer</span>
       </div>
 
-      {turn.answer ? (
-        <div className={styles.prose}>
-          <ReactMarkdown
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeGlossary, rehypeRatingChanges, rehypeMoves]}
-            components={markdownComponents}
-          >
-            {turn.answer}
-          </ReactMarkdown>
-        </div>
+      {turn.answer && inline ? (
+        <>
+          <Prose text={turn.answer.slice(0, at)} />
+          {turn.figures?.map((f, i) => <DataChart key={i} fig={f} />)}
+          <Prose text={turn.answer.slice(at + CHART_MARK.length)} />
+        </>
+      ) : turn.answer ? (
+        <Prose text={turn.answer} />
       ) : (
         !turn.error &&
         !turn.done && (
