@@ -183,7 +183,7 @@ function Bars({ fig }: { fig: FigureData }) {
 /** A results chart: for each measure (sales, profit before tax), the newest figure, its changes on the periods
  *  comparisons() picks, and its own upright bars, one per period, oldest on the left. Each measure has its own
  *  scale, so profit's swings show next to sales several times its size. The newest bar is solid and the bars it's
- *  compared with are pale, each named underneath; the rest are faint grey, there to show the trend between. The
+ *  compared with are pale, each named underneath (blue for sales, orange for profit); the rest are faint grey, there to show the trend between. The
  *  measures sit side by side, or one above the other on a phone. */
 function Results({ fig }: { fig: FigureData }) {
   const last = fig.labels.length - 1;
@@ -202,8 +202,11 @@ function Results({ fig }: { fig: FigureData }) {
           const hi = Math.max(0, ...values);
           const pos = (v: number) => ((v - lo) / (hi - lo || 1)) * 100;
           const zero = pos(0);
+          // Profit is orange and sales (or income) blue, the same pair as the site's other charts, so profit looks
+          // the same wherever it's drawn; an insurer's chart, profit alone, is orange too. --bar is read by the CSS.
+          const bar = { "--bar": /profit/i.test(s.name) ? "var(--series-2)" : "var(--series-1)" } as React.CSSProperties;
           return (
-            <div key={s.name} className={styles.resultsMeasure}>
+            <div key={s.name} className={styles.resultsMeasure} style={bar}>
               <div className={styles.resultsName}>
                 {s.name}, {fig.labels[last]}
               </div>

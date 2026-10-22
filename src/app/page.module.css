@@ -2138,12 +2138,12 @@ a.settingsBtn {
 }
 
 .resultsBarNow {
-  background: var(--series-1);
+  background: var(--bar, var(--series-1));
   opacity: 1;
 }
 
 .resultsBarCompared {
-  background: var(--series-1);
+  background: var(--bar, var(--series-1));
   opacity: 0.5;
 }
 
