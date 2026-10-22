@@ -2054,12 +2054,13 @@ a.settingsBtn {
   white-space: normal;
 }
 
-/* A results chart (Results in data-chart.tsx): one block per measure, side by side, one above the other when
-   there isn't room for two of 300px (so five bar values such as "₹2.7 lakh cr" fit side by side without touching). */
+/* A results chart (Results in data-chart.tsx): the measures' newest figures side by side (one above the other on a
+   phone), then one chart of every period's bars. */
 .results {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px 28px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px 28px;
+  margin-bottom: 14px;
 }
 
 .resultsMeasure {
@@ -2070,6 +2071,9 @@ a.settingsBtn {
 }
 
 .resultsName {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13px;
   color: var(--text-muted);
 }
@@ -2095,11 +2099,13 @@ a.settingsBtn {
   font-variant-numeric: tabular-nums;
 }
 
-/* The bars' box: room above the tallest bar for its value, and below the zero line for a loss's value. */
+/* The bars' box: room above the tallest bar for its value, and below the zero line for a loss's value. It's a
+   container, so the values can be thinned out when it's narrow (below). */
 .resultsPlot {
-  height: 150px;
+  height: 190px;
   padding-top: 20px;
-  margin-top: 6px;
+  margin-top: 4px;
+  container-type: inline-size;
 }
 
 .resultsPlotNegative {
@@ -2124,41 +2130,31 @@ a.settingsBtn {
   bottom: 0;
 }
 
-/* A bar is 62% of its column's width, centred. Other periods are grey. */
-.resultsBar {
-  background: var(--text-faint);
-  opacity: 0.3;
-}
-
 .resultsBar {
   position: absolute;
-  left: 19%;
-  width: 62%;
-  border-radius: 3px;
-}
-
-.resultsBarNow {
-  background: var(--bar, var(--series-1));
-  opacity: 1;
-}
-
-.resultsBarCompared {
-  background: var(--bar, var(--series-1));
-  opacity: 0.5;
+  border-radius: 3px 3px 0 0;
 }
 
 .resultsValue {
   position: absolute;
-  left: 50%;
   transform: translateX(-50%);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 500;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 
+/* Under 440px wide (a phone), ten values don't fit side by side: only the newest period's are written (the others
+   show when a bar is pointed at, and in "Show as table"). */
+@container (max-width: 440px) {
+  .resultsValue:not(.resultsValueLatest) {
+    display: none;
+  }
+}
+
 .resultsLabels {
   display: flex;
+  margin-top: 6px;
   font-size: 11px;
   line-height: 1.3;
   color: var(--text-faint);
@@ -2170,8 +2166,7 @@ a.settingsBtn {
   text-align: center;
 }
 
-/* The dates under the bars being compared, darker than the rest, with the bar's name below them. */
-.resultsLabelNamed {
+.resultsLabelLatest {
   color: var(--text-muted);
 }
 
