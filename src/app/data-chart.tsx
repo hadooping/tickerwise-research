@@ -19,18 +19,19 @@ export interface FigureData {
   changes?: "quarter" | "year" | null;
 }
 
-// The periods the newest one is compared with, as [label index, heading]: for quarters, the same quarter a year
-// earlier (four back) and the quarter before; for years, the year before. Missing ones are skipped.
-function comparisons(fig: FigureData): [number, string][] {
+// The periods the newest one is compared with, as [label index, heading, name under its bar]: for quarters, the
+// same quarter a year earlier (four back) and the quarter before; for years, the year before. Missing ones are
+// skipped.
+function comparisons(fig: FigureData): [number, string, string][] {
   const last = fig.labels.length - 1;
-  const out: [number, string][] =
+  const out: [number, string, string][] =
     fig.changes === "quarter"
       ? [
-          [last - 4, "On a year earlier"],
-          [last - 1, "On the quarter before"],
+          [last - 4, "On a year earlier", "A year earlier"],
+          [last - 1, "On the quarter before", "Quarter before"],
         ]
       : fig.changes === "year"
-        ? [[last - 1, "On the year before"]]
+        ? [[last - 1, "On the year before", "Year before"]]
         : [];
   return out.filter(([i]) => i >= 0);
 }
@@ -181,12 +182,14 @@ function Bars({ fig }: { fig: FigureData }) {
 
 /** A results chart: for each measure (sales, profit before tax), the newest figure, its changes on the periods
  *  comparisons() picks, and its own upright bars, one per period, oldest on the left. Each measure has its own
- *  scale, so profit's swings show next to sales several times its size. The newest bar is solid, the bars it's
- *  compared with are pale, and the rest are grey, in one colour for every measure, as each is named above its bars. The measures sit side by side, or one above the other on a phone. */
+ *  scale, so profit's swings show next to sales several times its size. The newest bar is solid and the bars it's
+ *  compared with are pale, each named underneath; the rest are faint grey, there to show the trend between. The
+ *  measures sit side by side, or one above the other on a phone. */
 function Results({ fig }: { fig: FigureData }) {
   const last = fig.labels.length - 1;
   const against = comparisons(fig);
-  const compared = new Set(against.map(([i]) => i));
+  // Each bar's name, for the newest and the ones it's compared with; the other bars have none.
+  const names = new Map<number, string>([...against.map(([i, , name]) => [i, name] as [number, string]), [last, "Latest"]]);
   return (
     <>
       <div className={styles.results}>
@@ -206,11 +209,12 @@ function Results({ fig }: { fig: FigureData }) {
               </div>
               <div className={styles.resultsFigure}>{now === null || now === undefined ? "–" : format(now, fig.unit)}</div>
               <div className={styles.resultsChips}>
-                {against.map(([i]) => {
+                {against.map(([i, heading]) => {
                   const pct = change(now, s.values[i]);
                   return pct === null ? null : (
                     <span key={i} className={styles.resultsChip}>
-                      <Change pct={pct} /> on {fig.labels[i]}
+                      {/* "▲ 2.8% on a year earlier", the period named under its bar. */}
+                      <Change pct={pct} /> {heading.toLowerCase()}
                     </span>
                   );
                 })}
@@ -221,7 +225,7 @@ function Results({ fig }: { fig: FigureData }) {
                   <span className={styles.resultsZero} style={{ bottom: `${zero}%` }} />
                   {s.values.map((v, i) => {
                     if (v === null || v === undefined) return null;
-                    const role = i === last ? styles.resultsBarNow : compared.has(i) ? styles.resultsBarCompared : "";
+                    const role = i === last ? styles.resultsBarNow : names.has(i) ? styles.resultsBarCompared : "";
                     // Each period's column is an equal share of the width; the bar sits in its middle.
                     const column = { left: `${(i / fig.labels.length) * 100}%`, width: `${100 / fig.labels.length}%` };
                     return (
@@ -244,12 +248,15 @@ function Results({ fig }: { fig: FigureData }) {
               </div>
               <div className={styles.resultsLabels}>
                 {/* Each label on two lines, the year below ("Jul–Sep" over "2026"), so five fit side by side on a
-                    phone. lastIndexOf(" ") finds the space before the year. */}
+                    phone; lastIndexOf(" ") finds the space before the year. The newest bar and the ones it's
+                    compared with are also named underneath ("Latest", "A year earlier"), so the chart says what
+                    it compares without a key. */}
                 {fig.labels.map((label, i) => (
-                  <span key={label + i}>
+                  <span key={label + i} className={names.has(i) ? styles.resultsLabelNamed : undefined}>
                     {label.slice(0, label.lastIndexOf(" "))}
                     <br />
                     {label.slice(label.lastIndexOf(" ") + 1)}
+                    {names.has(i) && <strong className={styles.resultsBarName}>{names.get(i)}</strong>}
                   </span>
                 ))}
               </div>
@@ -257,19 +264,6 @@ function Results({ fig }: { fig: FigureData }) {
           );
         })}
       </div>
-      <ul className={styles.resultsKey}>
-        <li>
-          <span className={`${styles.resultsKeySwatch} ${styles.resultsBarNow}`} /> Latest
-        </li>
-        {against.length > 0 && (
-          <li>
-            <span className={`${styles.resultsKeySwatch} ${styles.resultsBarCompared}`} /> Compared with it
-          </li>
-        )}
-        <li>
-          <span className={styles.resultsKeySwatch} /> Other {fig.changes === "year" ? "years" : "quarters"}
-        </li>
-      </ul>
     </>
   );
 }
