@@ -131,13 +131,15 @@ function ticks(min: number, max: number, count = 4) {
 
 const color = (k: number) => `var(--series-${k + 1})`;
 
-function Legend({ series }: { series: FigureData["series"] }) {
+// colours, when given, are each series' colour in order (a results chart picks them by name); otherwise the
+// series take the chart colours in turn.
+function Legend({ series, colours }: { series: FigureData["series"]; colours?: string[] }) {
   if (series.length < 2) return null; // a single series is named by the title
   return (
     <ul className={styles.figureLegend}>
       {series.map((s, k) => (
         <li key={s.name}>
-          <span className={styles.lineKey} style={{ background: color(k) }} />
+          <span className={styles.lineKey} style={{ background: colours?.[k] ?? color(k) }} />
           {s.name}
         </li>
       ))}
@@ -180,34 +182,35 @@ function Bars({ fig }: { fig: FigureData }) {
   );
 }
 
-/** A results chart: for each measure (sales, profit before tax), the newest figure, its changes on the periods
- *  comparisons() picks, and its own upright bars, one per period, oldest on the left. Each measure has its own
- *  scale, so profit's swings show next to sales several times its size. The newest bar is solid and the bars it's
- *  compared with are pale, each named underneath (blue for sales, orange for profit); the rest are faint grey, there to show the trend between. The
- *  measures sit side by side, or one above the other on a phone. */
+/** A results chart: each measure's newest figure and its changes on the periods comparisons() picks, then one
+ *  chart with every period's bars side by side, oldest on the left: sales (or income) in blue and profit before tax
+ *  in orange, as the key says. The newest period and the ones it's compared with are named under their dates. */
 function Results({ fig }: { fig: FigureData }) {
   const last = fig.labels.length - 1;
   const against = comparisons(fig);
-  // Each bar's name, for the newest and the ones it's compared with; the other bars have none.
+  // Each period's name, for the newest and the ones it's compared with; the other periods have none.
   const names = new Map<number, string>([...against.map(([i, , name]) => [i, name] as [number, string]), [last, "Latest"]]);
+  // Profit is orange and sales (or income) blue, the same pair as the site's other charts; an insurer's chart,
+  // profit alone, is orange too.
+  const colour = (name: string) => (/profit/i.test(name) ? "var(--series-2)" : "var(--series-1)");
+  // One scale for every bar, from the lowest value to the highest, always including zero, so a loss draws below
+  // the zero line. pos is a value's height as a percentage of the plot, from the bottom.
+  const values = fig.series.flatMap((s) => s.values.filter((v): v is number => v !== null && v !== undefined));
+  const lo = Math.min(0, ...values);
+  const hi = Math.max(0, ...values);
+  const pos = (v: number) => ((v - lo) / (hi - lo || 1)) * 100;
+  const zero = pos(0);
+  // Each bar's share of its period's column: the bars fill 70% of it, side by side, centred.
+  const width = 70 / fig.series.length;
   return (
     <>
       <div className={styles.results}>
         {fig.series.map((s) => {
           const now = s.values[last];
-          const values = s.values.filter((v): v is number => v !== null && v !== undefined);
-          // The scale runs from the lowest value to the highest, always including zero, so a loss draws below
-          // the zero line. pos is a value's height as a percentage of the plot, from the bottom.
-          const lo = Math.min(0, ...values);
-          const hi = Math.max(0, ...values);
-          const pos = (v: number) => ((v - lo) / (hi - lo || 1)) * 100;
-          const zero = pos(0);
-          // Profit is orange and sales (or income) blue, the same pair as the site's other charts, so profit looks
-          // the same wherever it's drawn; an insurer's chart, profit alone, is orange too. --bar is read by the CSS.
-          const bar = { "--bar": /profit/i.test(s.name) ? "var(--series-2)" : "var(--series-1)" } as React.CSSProperties;
           return (
-            <div key={s.name} className={styles.resultsMeasure} style={bar}>
+            <div key={s.name} className={styles.resultsMeasure}>
               <div className={styles.resultsName}>
+                <span className={styles.lineKey} style={{ background: colour(s.name) }} />
                 {s.name}, {fig.labels[last]}
               </div>
               <div className={styles.resultsFigure}>{now === null || now === undefined ? "–" : format(now, fig.unit)}</div>
@@ -216,56 +219,75 @@ function Results({ fig }: { fig: FigureData }) {
                   const pct = change(now, s.values[i]);
                   return pct === null ? null : (
                     <span key={i} className={styles.resultsChip}>
-                      {/* "▲ 2.8% on a year earlier", the period named under its bar. */}
+                      {/* "▲ 2.8% on a year earlier", the period named under its bars. */}
                       <Change pct={pct} /> {heading.toLowerCase()}
                     </span>
                   );
                 })}
               </div>
-              {/* Room is left below the zero line only when there's a loss to draw there. */}
-              <div className={`${styles.resultsPlot} ${lo < 0 ? styles.resultsPlotNegative : ""}`}>
-                <div className={styles.resultsArea}>
-                  <span className={styles.resultsZero} style={{ bottom: `${zero}%` }} />
-                  {s.values.map((v, i) => {
-                    if (v === null || v === undefined) return null;
-                    const role = i === last ? styles.resultsBarNow : names.has(i) ? styles.resultsBarCompared : "";
-                    // Each period's column is an equal share of the width; the bar sits in its middle.
-                    const column = { left: `${(i / fig.labels.length) * 100}%`, width: `${100 / fig.labels.length}%` };
-                    return (
-                      <div key={i} className={styles.resultsColumn} style={column} title={`${fig.labels[i]}: ${format(v, fig.unit)}`}>
-                        <span
-                          className={`${styles.resultsBar} ${role}`}
-                          style={{ bottom: `${Math.min(zero, pos(v))}%`, height: `max(${Math.abs(pos(v) - zero)}%, 2px)` }}
-                        />
-                        {/* The value above a bar, or below it for a loss. */}
-                        <span
-                          className={styles.resultsValue}
-                          style={v < 0 ? { top: `calc(${100 - pos(v)}% + 3px)` } : { bottom: `calc(${pos(v)}% + 3px)` }}
-                        >
-                          {format(v, fig.unit, true)}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              <div className={styles.resultsLabels}>
-                {/* Each label on two lines, the year below ("Jul–Sep" over "2026"), so five fit side by side on a
-                    phone; lastIndexOf(" ") finds the space before the year. The newest bar and the ones it's
-                    compared with are also named underneath ("Latest", "A year earlier"), so the chart says what
-                    it compares without a key. */}
-                {fig.labels.map((label, i) => (
-                  <span key={label + i} className={names.has(i) ? styles.resultsLabelNamed : undefined}>
-                    {label.slice(0, label.lastIndexOf(" "))}
-                    <br />
-                    {label.slice(label.lastIndexOf(" ") + 1)}
-                    {names.has(i) && <strong className={styles.resultsBarName}>{names.get(i)}</strong>}
-                  </span>
-                ))}
-              </div>
             </div>
           );
         })}
+      </div>
+      <Legend series={fig.series} colours={fig.series.map((s) => colour(s.name))} />
+      {/* Room is left below the zero line only when there's a loss to draw there. */}
+      <div className={`${styles.resultsPlot} ${lo < 0 ? styles.resultsPlotNegative : ""}`}>
+        <div className={styles.resultsArea}>
+          <span className={styles.resultsZero} style={{ bottom: `${zero}%` }} />
+          {fig.labels.map((label, i) => (
+            // Each period's column is an equal share of the width.
+            <div
+              key={label + i}
+              className={styles.resultsColumn}
+              style={{ left: `${(i / fig.labels.length) * 100}%`, width: `${100 / fig.labels.length}%` }}
+            >
+              {fig.series.map((s, k) => {
+                const v = s.values[i];
+                if (v === null || v === undefined) return null;
+                const left = 15 + k * width;
+                return (
+                  <React.Fragment key={s.name}>
+                    <span
+                      className={styles.resultsBar}
+                      title={`${s.name}, ${label}: ${format(v, fig.unit)}`}
+                      style={{
+                        left: `${left}%`,
+                        width: `calc(${width}% - 2px)`,
+                        bottom: `${Math.min(zero, pos(v))}%`,
+                        height: `max(${Math.abs(pos(v) - zero)}%, 2px)`,
+                        background: colour(s.name),
+                      }}
+                    />
+                    {/* The value above a bar, or below it for a loss. On a narrow screen only the newest
+                        period's values are written, so they don't run into each other (see the CSS). */}
+                    <span
+                      className={`${styles.resultsValue} ${i === last ? styles.resultsValueLatest : ""}`}
+                      style={{
+                        left: `${left + width / 2}%`,
+                        ...(v < 0 ? { top: `calc(${100 - pos(v)}% + 3px)` } : { bottom: `calc(${pos(v)}% + 3px)` }),
+                      }}
+                    >
+                      {format(v, fig.unit, true)}
+                    </span>
+                  </React.Fragment>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className={styles.resultsLabels}>
+        {/* Each label on two lines, the year below ("Jul–Sep" over "2026"), so five fit side by side on a phone;
+            lastIndexOf(" ") finds the space before the year. The newest period and the ones it's compared with
+            are also named underneath ("Latest", "A year earlier"). */}
+        {fig.labels.map((label, i) => (
+          <span key={label + i} className={i === last ? styles.resultsLabelLatest : undefined}>
+            {label.slice(0, label.lastIndexOf(" "))}
+            <br />
+            {label.slice(label.lastIndexOf(" ") + 1)}
+            {names.has(i) && <strong className={styles.resultsBarName}>{names.get(i)}</strong>}
+          </span>
+        ))}
       </div>
     </>
   );
