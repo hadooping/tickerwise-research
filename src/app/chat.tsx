@@ -364,6 +364,14 @@ function SunsetIcon() {
   );
 }
 
+function RupeeIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M7 4h10M7 8.5h10M7 4h3.5a4.5 4.5 0 010 9H7l7.5 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function BriefcaseIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -2010,6 +2018,10 @@ export default function Chat() {
         >
           <SunsetIcon /> Planners
         </button>
+        {/* Open to everyone: the regular-plan cost check needs no account and saves nothing. */}
+        <a href="/regular-plan-cost" className={styles.settingsBtn}>
+          <RupeeIcon /> Regular plan cost
+        </a>
         <a href="/help" className={styles.settingsBtn}>
           <HelpIcon /> Help &amp; FAQ
         </a>

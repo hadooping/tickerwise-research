@@ -1,0 +1,139 @@
+/* The regular-plan cost checker: an upload form, then the headline, the table and notes. Colours come from the
+   theme tokens in globals.css, so it follows light and dark mode with the rest of the site. */
+.checker {
+  margin: 24px 0 8px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hint {
+  display: block;
+  font-size: 13.5px !important;
+  color: var(--text-muted) !important;
+  margin: 0 !important;
+}
+
+.file {
+  font-size: 14px;
+  color: var(--text);
+  max-width: 100%;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.input {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  max-width: 280px;
+}
+
+.button {
+  align-self: flex-start;
+  padding: 9px 16px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 14.5px;
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.error {
+  color: var(--error) !important;
+  font-size: 14px !important;
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.headline {
+  font-size: 17px !important;
+}
+
+/* The table scrolls sideways inside its box on a narrow phone, so the page itself never does. */
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table th,
+.table td {
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.table th:first-child,
+.table td:first-child {
+  text-align: left;
+  white-space: normal;
+  min-width: 140px;
+}
+
+.table th {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.table tfoot td {
+  font-weight: 600;
+  border-bottom: none;
+}
+
+/* On a phone, the value and yearly-gap columns are left out so the rupee costs fit without scrolling: the gap is
+   still in each fund's "Direct grew ... a year vs ..." line, and the total value in the line above the table. */
+@media (max-width: 560px) {
+  .wide {
+    display: none;
+  }
+}
+
+.fund {
+  display: block;
+  font-weight: 500;
+}
+
+.others {
+  font-size: 13.5px;
+  color: var(--text-muted);
+}

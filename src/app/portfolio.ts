@@ -329,6 +329,7 @@ export interface DirectSavings {
     note?: string;
     error?: string;
   }[];
+  as_of?: string;
   total_value_inr: number;
   total_cost_this_year_inr: number;
   total_cost_over_10_years_inr: number;
