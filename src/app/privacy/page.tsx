@@ -14,7 +14,7 @@ export default function Privacy() {
         ← Back to Tickerwise
       </Link>
       <h1>Privacy</h1>
-      <p className={styles.updated}>Last updated 19 October 2026</p>
+      <p className={styles.updated}>Last updated 23 October 2026</p>
 
       <p>
         Tickerwise is a research tool for investing and personal finance in the US, UK and India: stocks, funds, bonds,
@@ -37,6 +37,13 @@ export default function Privacy() {
         size in words processed and how many web searches it ran, never its content), to see what Tickerwise costs to run.
         The counts aren&apos;t linked to your questions or to who you are. Clearing
         your browser&apos;s site data removes the ID.
+      </p>
+      <p>
+        The <Link href="/regular-plan-cost">regular plan cost</Link> check works without an account. Your CAS statement
+        and its password are sent to our server, read once in memory to compare your funds with their direct plans, and
+        discarded when the result is sent back. Nothing from the statement is stored: not your PAN, address, folio
+        numbers or funds. To stop the check being run over and over, we count checks for an hour by the same scrambled
+        code as questions, in the server&apos;s memory only.
       </p>
       <p>
         With that record we also keep the steps each answer took, to find slow or failing ones: which lookups and web

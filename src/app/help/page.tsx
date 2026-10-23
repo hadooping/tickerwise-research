@@ -26,7 +26,8 @@ const SECTIONS: { title: string; faqs: Faq[] }[] = [
             </p>
             <p>
               It also has interactive tools you can adjust yourself: a retirement planner, an overpay-the-mortgage-or-invest
-              comparison, an inheritance tax estimate, an ISA allowance tracker, a direct vs regular mutual fund comparison, a
+              comparison, an inheritance tax estimate, an ISA allowance tracker, a direct vs regular mutual fund comparison (also as a{" "}
+              <Link href="/regular-plan-cost">regular plan cost check</Link> you can run from your CAS without an account), a
               share valuation card, a bond yields chart that marks the world events behind past moves, and bond scenarios
               that show what happens to bonds, mortgages and annuities if interest rates move, and how bonds did in past
               crises.
